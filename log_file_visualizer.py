@@ -1,6 +1,7 @@
 import json
 from typing import Any, Dict, List, Optional, Union, Callable
 from datetime import datetime
+from graphviz import Digraph
 
 class LogSession:
     def __init__(self, session_id: str):
@@ -30,6 +31,8 @@ class LogAgent:
         self.args = args
         self.thread_id = thread_id
 
+        self.visualization_params = {} # For tracking colours and what index we're up to
+
     def __str__(self):
         return f"Agent ({self.id}) - {self.agent_name}"
 
@@ -40,9 +43,30 @@ class LogEvent:
         self.event_name = event_name
         self.agent_module = agent_module
         self.agent_class = agent_class
-        self.json_state = json_state
+        self.json_state = json.loads(json_state)
         self.timestamp = timestamp
         self.thread_id = thread_id
+
+        '''
+        event_name == "received_message"
+            # json_state
+            # '{"message": "We\'re launching a new drink, it\'s flavoured like water and is called \'h2-oh\'.\\nKey facts are:\\n- No calories, sugar-free\\n- Can be enjoyed hot or cold\\n- No expiry date\\n- One ingredient, water\\n\\nTargeted to everyone.\\n\\nPlease prepare a brief with this structure:\\nA. Taglines:\\n\\nB. Short-form video summary:\\n\\nC. Alternative product names:\\n", "sender": "user_proxy", "valid": true}'
+        
+        event_name == "reply_func_executed"
+            # json_state
+            # '{"reply_func_module": "autogen.agentchat.conversable_agent", "reply_func_name": "check_termination_and_human_reply", "final": false, "reply": null}'
+            # '{"reply_func_module": "autogen.agentchat.conversable_agent", "reply_func_name": "generate_function_call_reply", "final": false, "reply": null}'
+            # '{"reply_func_module": "autogen.agentchat.conversable_agent", "reply_func_name": "generate_tool_calls_reply", "final": false, "reply": null}'
+            # '{"reply_func_module": "autogen.agentchat.conversable_agent", "reply_func_name": "generate_oai_reply", "final": true, "reply": {"content": "Agency Red: \\n\\nHere\'s our pitch for the \'h2-oh\' campaign:\\n\\n**A. Taglines:**\\n1. \\"Pure, Simple, Refreshing\\"\\n2. \\"Water, Evolved.\\"\\n3. \\"The Drink that\'s Still Water.\\"\\n\\n**B. Short-form video summary:** \\n(60-second spot)\\n\\n[Scene 1: Close-up of a person taking a sip from a glass of \'h2-oh\']\\nNarrator (Voiceover): \\"We drink it every day, but never truly see it.\\"\\n[Scene 2: A splashy montage of people drinking \'h2-oh\' in different settings]\\nNarrator (Voiceover): \\"Introducing h2-oh, water that\'s still water.\\"\\n[Scene 3: Close-up of the \'h2-oh\' bottle with the label and tagline on screen]\\nNarrator (Voiceover): \\"No calories, no sugar, just pure refreshment.\\"\\n[Scene 4: People enjoying \'h2-oh\' hot and cold]\\nNarrator (Voiceover): \\"Enjoy it hot or cold, whenever you need it.\\"\\n[Scene 5: Close-up of the person taking a sip again with a satisfied expression]\\nNarrator (Voiceover): \\"Experience water, reimagined.\\"\\n\\n**C. Alternative product names:**\\n1. AquaFresh\\n2. Purezza\\n3. HydroFlow", "refusal": null, "role": "assistant", "function_call": null, "tool_calls": null}}'
+
+        event_name == "_summary_from_nested_chat start"
+            # json_state
+            # '{"nested_chat_id": "7cadd935-2408-4a6b-90e1-06a8b25b1a82", "chat_queue": [{"recipient": "<<non-serializable: ConversableAgent>>", "message": "<<non-serializable: function>>", "summary_method": "last_msg", "max_turns": 1}], "sender": "agency_red"}'
+
+        event_name == "_summary_from_nested_chat end"
+            # json_state
+            # '{"nested_chat_id": "7cadd935-2408-4a6b-90e1-06a8b25b1a82"}'
+        '''
 
     def __str__(self):
         return f"Event ({self.timestamp}) - {self.source_name}, {self.event_name}, {self.agent_module}, {self.agent_class}"
@@ -180,54 +204,257 @@ def add_log_invocation(invocation: LogInvocation, log_invocations: Dict[int, Log
         print(f"Invocation {invocation.invocation_id} already exists. No duplicate added.")
         return False
 
-# Read the log file
-with open('./autogen_logs/20240904_035445_runtime_nested_chat.log', 'r') as file:
-    log_lines = file.readlines()
+def load_log_file(file_and_path: str, clients: Dict, agents: Dict, events: Dict, invocations: Dict, all_ordered: List) -> str:
+    '''Loads an AutoGen log file into respective dictionaries and an ordered list, returning the session id'''
+
+    # Read the log file
+    with open(file_and_path, 'r') as file:
+        log_lines = file.readlines()
+
+    # Iterate over each line in the log
+    for line_no, line in enumerate(log_lines):
+        # Extract the session ID
+        if line.startswith("Started new session with Session ID:"):
+            session_id = line.split(':')[-1].strip()
+        elif line.startswith("[file_logger]"):
+            # Ignore file logging errors
+            pass
+        else:
+            # Can it be converted to JSON
+            try:
+                line_data = json.loads(line)
+
+                line_object = parse_log_line(line_data=line_data)
+
+                new_object = False
+
+                if isinstance(line_object, LogClient):
+                    new_object = add_log_client(line_object, clients)
+                elif isinstance(line_object, LogAgent):
+                    new_object = add_log_agent(line_object, agents)
+                elif isinstance(line_object, LogEvent):
+                    new_object = add_log_event(line_object, events)
+                elif isinstance(line_object, LogInvocation):
+                    new_object = add_log_invocation(line_object, invocations)
+                else:
+                    print(f"Uh oh, unknown object for the line, type is {type(line_object)}")
+
+                if new_object:
+                    all_ordered.append(line_object)
+
+            except json.JSONDecodeError as e:
+                print("Note - can't decode line.")
+
+
+def visualize_execution(diagram_name: str, directory: str, filename: str, format: str, all_ordered: List, clients: Dict, agents: Dict[int, LogAgent], events: Dict, invocations: Dict):
+    '''Create the diagram of the program execution'''
+
+    standard_fill_color = "#EEEEEE"
+    standard_border_color = "#AAAAAA"
+
+    def _assign_agent_color(agent_colors, agent_id) -> str:
+        """Assigns a color to an agent in a deterministic order.
+
+        Args:
+            agent_colors: A dictionary mapping agent ids to their assigned colors.
+            agent_name: The name of the agent to assign a color to.
+
+        Returns:
+            The color assigned to the agent.
+        """
+        available_colors = [
+            '#FAF4D0', '#C0DFB7', '#EDB7AD', '#FBDBD5', '#E4EEE9', '#CDD5C6', 
+            '#A9C9D4', '#E8C4C6', '#EBCFB9', '#FF0080', '#808080', '#ADD8E6',
+            '#90EE90', '#FFFFE0'
+        ]
+        color_index = len(agent_colors) % len(available_colors)  # Cycle through colors
+        color = available_colors[color_index]
+        agent_colors[agent_id] = color
+        return color
+    
+    def _darken_color(color, amount=0.1):
+        """Darkens a color by a given amount.
+
+        Args:
+            color: The color to darken, as a hex string (e.g., '#FF0000').
+            amount: The amount to darken (0.0 - 1.0). 0.0 is no change, 1.0 is maximum darkness.
+
+        Returns:
+            The darkened color as a hex string.
+        """
+        c = int(color[1:], 16)
+        r = max(0, int((c >> 16) - (255 * amount)))  # Clamp to 0
+        g = max(0, int(((c >> 8) & 0xFF) - (255 * amount))) # Clamp to 0
+        b = max(0, int((c & 0xFF) - (255 * amount))) # Clamp to 0
+        return f"#{r:02X}{g:02X}{b:02X}"
+    
+    def _agent_id_by_name(agent_name: str) -> int:
+        """Retrieves an agent id by their name"""
+        for agent in agents.values():
+            if agent.agent_name == agent_name:
+                return agent.id
+            
+        raise Exception(f"Unknown agent, name: {agent_name}")
+    
+    def _client_by_id(client_id: int) -> LogClient:
+        """Retrieves a client by id"""
+        if client_id in clients:
+            return clients[client_id]
+        else:
+            raise Exception(f"Unknown client, id: {client_id}")
+    
+    def _get_agent_node_id(agent: LogAgent) -> str:
+        """Gets the unique node id for an agent node"""
+        return f"{agent.id}_{agent.visualization_params['index']}"
+    
+    def _add_node_agent(dot: Digraph, agent: LogAgent):
+        """Add an agent node to the diagram"""
+
+        # Increment the index of the agent
+        agent.visualization_params["index"] = agent.visualization_params["index"] + 1
+
+        # Create a unique node id
+        node_id = _get_agent_node_id(agent)
+
+        # Add the node to the diagram
+        color = agent.visualization_params["color"]
+        dot.node(node_id, agent.agent_name, shape='egg', color=_darken_color(color, 0.2), style='filled', fillcolor=color)
+
+    def _add_node_invocation(dot: Digraph, invocation: LogInvocation):
+        """Add an invocation node to the diagram"""
+
+        client_name = _client_by_id(invocation.client_id).class_name
+
+        dot.node(invocation.invocation_id, client_name, shape='invhouse', color=standard_border_color, style='filled', fillcolor=standard_fill_color)
+
+    def _add_agent_to_agent_edge(dot: Digraph, sender_agent: LogAgent, recipient_agent: LogAgent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
+        """Adds an edge between nodes"""
+
+        dot.edge(_get_agent_node_id(sender_agent), _get_agent_node_id(recipient_agent), label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
+
+    def _add_agent_to_invocation(dot: Digraph, current_agent: LogAgent, invocation: LogInvocation):
+        """Adds an edge between an agent and an invocation"""
+        
+        dot.edge(_get_agent_node_id(current_agent), invocation.invocation_id)
+
+        
+    # Create a Digraph object
+    dot = Digraph(comment=diagram_name)
+
+    # Create agent-color dictionary
+    agent_colors = {}
+
+    # Current agent
+    current_agent = None
+
+    # Run through all execution points in the log, in order of execution
+    for i, item in enumerate(all_ordered):
+        
+        if isinstance(item, LogAgent):
+            agent: LogAgent = agents[item.id]
+
+            # Assign an number to the agent as we'll be repeating the agent throughout the diagram
+            # Every new instance will have an incremented number
+            if not "index" in agent.visualization_params:
+                agent.visualization_params["index"] = 0
+
+            # Assign a colour to the agent
+            if not agent.id in agent_colors:
+                _assign_agent_color(agent_colors, agent.id)
+                agent.visualization_params["color"] = agent_colors[agent.id]
+
+            #agent_color = agent_colors[agent.id]
+
+            #dot.node(str(i), agent.agent_name, shape='egg', color=_darken_color(agent_color), style='filled', fillcolor=agent_color)
+
+        elif isinstance(item, LogEvent):
+
+            event: LogEvent = item
+
+            if event.event_name == "received_message":
+                # A message from one agent to another
+                sender_agent = agents[_agent_id_by_name(event.json_state["sender"])]
+                recipient_agent = agents[_agent_id_by_name(event.source_name)]
+
+                # If we don't already have the sender agent on the diagram, add them in
+                if current_agent is None:
+                    _add_node_agent(dot, sender_agent)
+
+                # Add recipient agent to diagram
+                _add_node_agent(dot, recipient_agent)
+
+                # Create edge between agents
+                edge_text = event.event_name
+                _add_agent_to_agent_edge(dot, sender_agent, recipient_agent, edge_text)
+
+                # We're now at the recipient agent
+                current_agent = recipient_agent
+
+            
+            elif event.event_name == "reply_func_executed":
+                # Reply function executed, such as termination, generate oai reply, etc.
+
+                # We'll only consider the final ones for now
+                if event.json_state["final"]:
+                    reply_func_name = event.json_state["reply_func_name"]
+                    print(reply_func_name)
+
+            elif event.event_name == "_summary_from_nested_chat start":
+                print("<START OF NESTED CHAT")
+            elif event.event_name == "_summary_from_nested_chat end":
+                print("<END OF NESTED CHAT")
+            else:
+                pass
+
+        elif isinstance(item, LogInvocation):
+            invocation: LogInvocation = item
+
+            # Add the invocation node
+            _add_node_invocation(dot, invocation)
+
+            # Add the edge between agent and invocation
+            _add_agent_to_invocation(dot, current_agent, invocation)
+
+
+    dot.render(directory=directory, filename=filename, format=format)
+
 
 # Initialize variables to store the extracted information
-session_id = None
 clients = {}
 agents = {}
 events = {}
 invocations = {}
 all_ordered = []
 
-# Iterate over each line in the log
-for line_no, line in enumerate(log_lines):
-    # Extract the session ID
-    if line.startswith("Started new session with Session ID:"):
-        session_id = line.split(':')[-1].strip()
-    elif line.startswith("[file_logger]"):
-        # Ignore file logging errors
-        pass
-    else:
-        # Can it be converted to JSON
-        try:
-            line_data = json.loads(line)
-
-            line_object = parse_log_line(line_data=line_data)
-
-            new_object = False
-
-            if isinstance(line_object, LogClient):
-                new_object = add_log_client(line_object, clients)
-            elif isinstance(line_object, LogAgent):
-                new_object = add_log_agent(line_object, agents)
-            elif isinstance(line_object, LogEvent):
-                new_object = add_log_event(line_object, events)
-            elif isinstance(line_object, LogInvocation):
-                new_object = add_log_invocation(line_object, invocations)
-            else:
-                print(f"Uh oh, unknown object for the line, type is {type(line_object)}")
-
-            if new_object:
-                all_ordered.append(line_object)
-
-        except json.JSONDecodeError as e:
-            print("Note - can't decode line.")
+session_id = load_log_file('./autogen_logs/20240904_035445_runtime_nested_chat.log', clients, agents, events, invocations, all_ordered)
 
 # Print the extracted information
 print(f"\n\nSession ID: {session_id}")
 
 for object in all_ordered:
     print(object)
+
+visualize_execution('Nested Chat', 'ms_graphviz/diagrams', 'diagram_nested_chat', 'svg', all_ordered, clients, agents, events, invocations)
+
+
+'''
+print("\nClients:")
+for client in clients:
+    print(f"{client['client_id']} Class: {client['class']}")
+
+print("\nAgents:")
+for agent in agents:
+    print(f"{agent['id']} Name: {agent['agent_name']}, Type: {agent['agent_type']}")
+
+print("\nEvents:")
+for event in events:
+    print(f"{event['source_id']} Source: {event['source_name']}, Event: {event['event_name']}")
+
+print("\nInvocations:")
+for invocation in invocations:
+    print(f"{invocation['invocation_id']} Client: {invocation['client_id']}, Source: {invocation['source_name']}")
+
+print("\n---\n\nALL\n\n")
+for item in all:
+    print(type(item))
+'''
