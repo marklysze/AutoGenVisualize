@@ -467,6 +467,7 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
             event: LogEvent = item
 
             if event.event_name == "received_message":
+
                 # A message from one agent to another
                 sender_agent = agents[_agent_id_by_name(event.json_state["sender"])]
                 recipient_agent = agents[_agent_id_by_name(event.source_name)]
@@ -474,6 +475,20 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
                 # If we don't already have the sender agent on the diagram, add them in
                 if current_agent is None:
                     _add_node_agent(current_level, sender_agent)
+
+                # If we are in a nested chat and we haven't linked to the parent agent node, link it
+                if current_nested_chat_id != "0" and not nested_chats[current_nested_chat_id]["linked_to_parent_agent_node"]:
+
+                    # If the sender is not the parent of this nested chat, we need to create a link between the parent node and the new sender
+                    if nested_chats[current_nested_chat_id]["parent_agent_node_id"] != sender_agent.id:
+
+                        # Add the sender agent to the nested chat (as it's not the parent agent so we create a new agent node)
+                        _add_node_agent(current_level, sender_agent)
+
+                        # Then link the parent to this sender node
+                        _add_agent_to_agent_edge(nested_parent_graphs[nested_chats[current_nested_chat_id]["level_index"]], agents[nested_chats[current_nested_chat_id]["parent_agent_node_id"]], sender_agent, "Nested Chat")
+
+                    nested_chats[current_nested_chat_id]["linked_to_parent_agent_node"] = True
 
                 # Add recipient agent to diagram
                 _add_node_agent(current_level, recipient_agent)
@@ -496,7 +511,6 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
                 # We're now at the recipient agent
                 current_agent = recipient_agent
-
             
             elif event.event_name == "reply_func_executed":
                 # Reply function executed, such as termination, generate oai reply, etc.
@@ -524,33 +538,16 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
                         last_termination = event
 
                     if reply_func_name == "_summary_from_nested_chats":
-                        # MS HANDLE THIS CASE - THIS IS WHERE
-                        # A NESTED CHAT EXITS AND RETURNS TO THE PARENTS FLOW
-
-                        # We have just moved out from the nested chat, now add the agent
-                        # that started the nested chat
-
-                        # Connect the previous summarise from inside the nested chat
-                        # to this agent
-                        # _add_event_to_agent_edge(last_nested_summarize_level_and_event[0], last_nested_summarize_level_and_event[1], recipient_agent, reply_func_name)
-
-                        # Moving up out of a nested chat, add the graph to the parent one
-                        # nested_parent_graphs[current_level_index].subgraph(current_level)
-
-                        # Move back to the parent
-                        # current_level = nested_parent_graphs[current_level_index]
 
                         # Add recipient agent to diagram
                         recipient_agent = agents[_agent_id_by_name(event.source_name)]
                         _add_node_agent(current_level, recipient_agent)
 
-                        _add_event_to_agent_edge(current_level, last_nested_summarize_level_and_event[1], recipient_agent, reply_func_name)
+                        _add_event_to_agent_edge(current_level, last_nested_summarize_level_and_event[1], recipient_agent, reply_func_name, event.json_state['reply'])
 
                     # If we have available invocations, add them to the agent in a return sequence
                     if len(available_invocations) > 0:
                         for invocation in available_invocations:
-                            # _add_invocation_to_event_edge(dot, event, invocation, "!")
-
                             _add_invocation_to_agent_return_edge(current_level, current_agent, invocation, reply_func_name)
 
                         # Once added, we clear the available invocations
@@ -571,7 +568,8 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
                 # Moving down into a nested chat
                 current_level_index = current_level_index + 1
-                new_nested = Digraph(name='cluster_' + str(current_level_index))  # Use 'cluster_' to treat it as a subgraph
+                nested_chat_node_name = 'cluster_' + str(current_level_index)
+                new_nested = Digraph(nested_chat_node_name)  # Use 'cluster_' to treat it as a subgraph
                 
                 # Style the subgraph
                 new_nested.attr(style='rounded, filled', color='#EEF7FF', fillcolor=_darken_color('#EEF7FF'), label="Nested Chat", labeljust="r", labelloc="b", penwidth="2", margin="30")
@@ -580,19 +578,20 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
                 nested_parent_graphs[current_level_index] = current_level
                 nested_graphs[current_level_index] = new_nested
 
+                # Keep track of this nested chat by id
+                # and the parent node
+                nested_chats[nested_chat_id] = {
+                    "level_index": current_level_index,
+                    "parent_agent_node_id": _agent_id_by_name(event.source_name),
+                    "nested_chat_node_name": nested_chat_node_name,
+                    "linked_to_parent_agent_node": False # Whether wwe have linked to the parent agent node
+                    }
+
                 # Move to the new level
                 current_level = new_nested
-
-                # Keep track of this nested chat by id
-                nested_chats[nested_chat_id] = {
-                    # MS TO ADD
-                    }
                 
                 nested_parents[nested_chat_id] = current_nested_chat_id
                 current_nested_chat_id = nested_chat_id
-
-                # Keep track of the parent agent of this nested chat
-                nested_chat_parent_Agent = agents[_agent_id_by_name(event.source_name)]
 
             elif event.event_name == "_summary_from_nested_chat end":
 
@@ -630,8 +629,13 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
             elif event.event_name == "_initiate_chat max_turns":
 
-                # Maximum turns hit, add a label to the current agent
-                _add_agent_info_loop_edge(current_level, current_agent, f"Max turns hit ({event.json_state['turns']})")
+                # Maximum turns hit, add a termination node
+                _add_node_terminate(current_level, event)
+
+                # Link it to the agent
+                _add_agent_to_event_edge(current_level, current_agent, event, f"Max turns hit ({event.json_state['turns']})")
+
+                last_termination = event
 
             else:
                 pass
@@ -676,8 +680,8 @@ for object in all_ordered:
 # session_id = load_log_file('./autogen_logs/20240908_042901_runtime_terminate.log', clients, agents, events, invocations, all_ordered)
 # visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_terminate', 'svg', all_ordered, clients, agents, events, invocations)
 
-# session_id = load_log_file('./autogen_logs/20240908_051130_runtime_max_turns.log', clients, agents, events, invocations, all_ordered)
-# visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_max_turns', 'svg', all_ordered, clients, agents, events, invocations)
+session_id = load_log_file('./autogen_logs/20240908_051130_runtime_max_turns.log', clients, agents, events, invocations, all_ordered)
+visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_max_turns', 'svg', all_ordered, clients, agents, events, invocations)
 
-session_id = load_log_file('./autogen_logs/20240908_185246_runtime_chess.log', clients, agents, events, invocations, all_ordered)
-visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_chess', 'svg', all_ordered, clients, agents, events, invocations)
+# session_id = load_log_file('./autogen_logs/20240908_185246_runtime_chess.log', clients, agents, events, invocations, all_ordered)
+# visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_chess', 'svg', all_ordered, clients, agents, events, invocations)
