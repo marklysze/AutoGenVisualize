@@ -30,6 +30,7 @@ class LogAgent:
         self.wrapper_id = wrapper_id
         self.session_id = session_id
         self.current_time = current_time
+        self.current_timestamp = datetime.fromisoformat(current_time).timestamp()
         self.agent_type = agent_type
         self.args = args
         self.thread_id = thread_id
@@ -41,15 +42,15 @@ class LogAgent:
 
 class LogEvent:
     def __init__(self, source_id: int, source_name: str, event_name: str, agent_module: str, agent_class: str, json_state: str, timestamp: str, thread_id: int):
+        self.event_id = self.get_id_str(timestamp)
         self.source_id = source_id
         self.source_name = source_name
         self.event_name = event_name
         self.agent_module = agent_module
         self.agent_class = agent_class
         self.json_state = json.loads(json_state) if json_state else "{}"
-        self.timestamp = timestamp
+        self.timestamp = self.to_unix_timestamp(timestamp)
         self.thread_id = thread_id
-        self.event_id = self.get_id_str()
 
         '''
         event_name == "received_message"
@@ -70,18 +71,22 @@ class LogEvent:
         event_name == "_summary_from_nested_chat end"
             # json_state
             # '{"nested_chat_id": "7cadd935-2408-4a6b-90e1-06a8b25b1a82"}'
+
+        event_name == "generate_tool_calls_reply"
+            # json_state
+            # {"tool_call_id": "ollama_manual_func_1546", "function_name": "currency_calculator", "function_arguments": "{\"base_amount\": 123.45, \"base_currency\": \"EUR\", \"quote_currency\": \"USD\"}", "return_value": "135.80 USD", "sender": "chatbot"}
         '''
 
     def __str__(self):
         return f"Event ({self.timestamp}) - {self.source_name}, {self.event_name}, {self.agent_module}, {self.agent_class}"
 
     # Timestamp will be key, convert to a number
-    def to_unix_timestamp(self) -> float:
-        dt = datetime.fromisoformat(self.timestamp)
+    def to_unix_timestamp(self, timestamp_str: str) -> float:
+        dt = datetime.fromisoformat(timestamp_str)
         return dt.timestamp()
     
-    def get_id_str(self) -> str:
-        id = str(self.to_unix_timestamp())
+    def get_id_str(self, timestamp_str: str) -> str:
+        id = str(self.to_unix_timestamp(timestamp_str))
         return id
     
 class LogInvocation:
@@ -194,9 +199,8 @@ def add_log_agent(agent: LogAgent, log_agents: Dict[int, LogAgent]) -> bool:
 
 # Function to add a new LogEvent to the dictionary
 def add_log_event(event: LogEvent, log_events: Dict[float, LogEvent]) -> bool:
-    unix_timestamp = event.to_unix_timestamp()
-    if unix_timestamp not in log_events:
-        log_events[unix_timestamp] = event
+    if event.timestamp not in log_events:
+        log_events[event.timestamp] = event
         print(f"Event at {event.timestamp} added - {event.source_name}, {event.event_name}.")
         return True
     else:
@@ -328,6 +332,16 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
         color = agent.visualization_params["color"]
         dot.node(node_id, agent.agent_name, shape='egg', color=_darken_color(color, 0.2), style='filled', fillcolor=color)
 
+    def _add_node_summary(dot: Digraph, event: LogEvent):
+        """Add a summary node to the diagram"""
+        
+        dot.node(event.event_id, "Summarize", shape="parallelogram", color=standard_border_color, style='filled', fillcolor=standard_fill_color)
+
+    def _add_node_terminate(dot: Digraph, event: LogEvent):
+        """Add a termination node to the diagram"""
+
+        dot.node(event.event_id, "Termination", shape="octagon", color=standard_border_color, style='filled', fillcolor=standard_fill_color)
+
     def _add_node_event_reply_func_executed(dot: Digraph, event: LogEvent, event_name: str, shape_name: str):
         """Add an event node to the diagram"""
 
@@ -343,6 +357,13 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
     def _add_agent_to_agent_edge(dot: Digraph, sender_agent: LogAgent, recipient_agent: LogAgent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
         """Adds an edge between nodes"""
 
+        # Ensure the agent nodes exist (e.g. they aren't index 0)
+        if sender_agent.visualization_params['index'] == 0:
+            _add_node_agent(dot, sender_agent)
+
+        if recipient_agent.visualization_params['index'] == 0:
+            _add_node_agent(dot, recipient_agent)
+
         dot.edge(_get_agent_node_id(sender_agent), _get_agent_node_id(recipient_agent), label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
 
     def _add_agent_to_event_edge(dot: Digraph, agent: LogAgent, event: LogEvent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
@@ -350,11 +371,29 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
         dot.edge(_get_agent_node_id(agent), event.event_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
 
+    def _add_event_to_event_edge(dot: Digraph, event_one: LogEvent, event_two: LogEvent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
+        """Adds an edge between two events"""
+
+        dot.edge(event_one.event_id, event_two.event_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
+
+    def _add_event_to_agent_edge(dot: Digraph, event: LogEvent, agent: LogAgent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
+        """Adds an edge between an event and an agent"""
+
+        eventid = event.event_id  # TEMP 
+        agentid = _get_agent_node_id(agent) # TEMP
+        dot.edge(event.event_id, _get_agent_node_id(agent), label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
+
     def _add_invocation_to_agent_return_edge(dot: Digraph, agent: LogAgent, invocation: LogInvocation, edge_text: str, tooltip_text: str = "", href_text: str = ""):
         """Adds an edge between agent and invocation and a return edge"""
 
         dot.edge(_get_agent_node_id(agent), invocation.invocation_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
         dot.edge(invocation.invocation_id, _get_agent_node_id(agent))
+
+    def _add_invocation_to_event_return_edge(dot: Digraph, event: LogEvent, invocation: LogInvocation, edge_text: str, tooltip_text: str = "", href_text: str = ""):
+        """Adds an edge between event and invocation and a return edge"""
+
+        dot.edge(event.event_id, invocation.invocation_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
+        dot.edge(invocation.invocation_id, event.event_id)
 
     def _add_event_to_agent_return_edge(dot: Digraph, agent: LogAgent, event: LogEvent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
         """Adds an edge between agent and invocation and a return edge"""
@@ -367,6 +406,10 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
         
         dot.edge(event.event_id, invocation.invocation_id, label)
 
+    def _add_agent_info_loop_edge(dot: Digraph, agent: LogAgent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
+        """Adds an information-only loop edge to/from an agent"""
+
+        dot.edge(_get_agent_node_id(agent), _get_agent_node_id(agent), label=edge_text)
         
     # Create a Digraph object
     dot = Digraph(comment=diagram_name)
@@ -376,19 +419,32 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
     current_level_index = 0 # K
     nested_graphs: Dict[str, Digraph] = {} # Nested graphs
     nested_parent_graphs: Dict[str, Digraph] = {} # Parent of a nested graph
+    nested_chats: Dict[str, Dict] = {
+        "0": {}
+    } # Nested chats, we include and represent the top level chat as 0
+    nested_parents: Dict[str, str] = {} # Parent of a nested chat
+    current_nested_chat_id = "0"
 
     # Create agent-color dictionary
     agent_colors = {}
 
     # Current agent
-    current_agent = None
+    current_agent: LogAgent = None
+
+    # Current termination
+    last_termination: LogEvent = None
+
+    # Last nested chat summarise node
+    last_nested_summarize_level_and_event: [Digraph, LogEvent] = None
 
     # Available invocation (invocations occur before the event that ran them, so we keep it and connect it to the following event)
     available_invocations = []
 
+    # Summary nodes, no ids so 
+
     # Run through all execution points in the log, in order of execution
     for i, item in enumerate(all_ordered):
-        
+
         if isinstance(item, LogAgent):
             agent: LogAgent = agents[item.id]
 
@@ -424,7 +480,19 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
                 # Create edge between agents
                 edge_text = event.event_name
-                _add_agent_to_agent_edge(current_level, sender_agent, recipient_agent, edge_text)
+
+                # Create tool tip with message
+                if isinstance(event.json_state["message"], str):
+                    tooltip_text = event.json_state["message"]
+                else:
+                    tooltip_text = event.json_state["message"]["content"]
+                    if "tool_calls" in event.json_state["message"] and event.json_state["message"]["tool_calls"] is not None:
+                        for tool_call in event.json_state["message"]["tool_calls"]:
+                            if len(tooltip_text) > 0:
+                                tooltip_text += "\n"
+                            tooltip_text += f"Tool call: {json.dumps(tool_call['function'])}"
+
+                _add_agent_to_agent_edge(current_level, sender_agent, recipient_agent, edge_text, tooltip_text)
 
                 # We're now at the recipient agent
                 current_agent = recipient_agent
@@ -443,6 +511,40 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
                     # Link it to the current agent
                     # _add_agent_to_event_edge(dot, current_agent, event, reply_func_name)
+
+                    # Specific function handling
+                    if reply_func_name == "check_termination_and_human_reply":
+
+                        # Add summary node
+                        _add_node_terminate(current_level, event)
+
+                        # Link it to the agent
+                        _add_agent_to_event_edge(current_level, current_agent, event, reply_func_name)
+
+                        last_termination = event
+
+                    if reply_func_name == "_summary_from_nested_chats":
+                        # MS HANDLE THIS CASE - THIS IS WHERE
+                        # A NESTED CHAT EXITS AND RETURNS TO THE PARENTS FLOW
+
+                        # We have just moved out from the nested chat, now add the agent
+                        # that started the nested chat
+
+                        # Connect the previous summarise from inside the nested chat
+                        # to this agent
+                        # _add_event_to_agent_edge(last_nested_summarize_level_and_event[0], last_nested_summarize_level_and_event[1], recipient_agent, reply_func_name)
+
+                        # Moving up out of a nested chat, add the graph to the parent one
+                        # nested_parent_graphs[current_level_index].subgraph(current_level)
+
+                        # Move back to the parent
+                        # current_level = nested_parent_graphs[current_level_index]
+
+                        # Add recipient agent to diagram
+                        recipient_agent = agents[_agent_id_by_name(event.source_name)]
+                        _add_node_agent(current_level, recipient_agent)
+
+                        _add_event_to_agent_edge(current_level, last_nested_summarize_level_and_event[1], recipient_agent, reply_func_name)
 
                     # If we have available invocations, add them to the agent in a return sequence
                     if len(available_invocations) > 0:
@@ -464,6 +566,9 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
                 _add_event_to_agent_return_edge(current_level, current_agent, event, event.event_name)
 
             elif event.event_name == "_summary_from_nested_chat start":
+
+                nested_chat_id = event.json_state['nested_chat_id']
+
                 # Moving down into a nested chat
                 current_level_index = current_level_index + 1
                 new_nested = Digraph(name='cluster_' + str(current_level_index))  # Use 'cluster_' to treat it as a subgraph
@@ -478,6 +583,17 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
                 # Move to the new level
                 current_level = new_nested
 
+                # Keep track of this nested chat by id
+                nested_chats[nested_chat_id] = {
+                    # MS TO ADD
+                    }
+                
+                nested_parents[nested_chat_id] = current_nested_chat_id
+                current_nested_chat_id = nested_chat_id
+
+                # Keep track of the parent agent of this nested chat
+                nested_chat_parent_Agent = agents[_agent_id_by_name(event.source_name)]
+
             elif event.event_name == "_summary_from_nested_chat end":
 
                 # Style the subgraph
@@ -488,6 +604,35 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
                 # Move back to the parent
                 current_level = nested_parent_graphs[current_level_index]
+
+            elif event.event_name == "_reflection_with_llm_as_summary" or event.event_name == "_last_msg_as_summary":
+                    
+                # Add summary node
+                _add_node_summary(current_level, event)
+
+                # Link it to the agent or termination (which ever is later)
+                if last_termination is not None and last_termination.timestamp > current_agent.current_timestamp:
+                    _add_event_to_event_edge(current_level, last_termination, event, event.event_name)
+                else:
+                    _add_agent_to_event_edge(current_level, current_agent, event, event.event_name)
+
+                # If we have available invocations, add them to the agent in a return sequence
+                if len(available_invocations) > 0:
+                    for invocation in available_invocations:
+                        _add_invocation_to_event_return_edge(current_level, event, invocation, event.event_name)
+
+                    # Once added, we clear the available invocations
+                    available_invocations.clear()
+
+                # Track last summarize event so we can connect it to the outside
+                # of the nested chat
+                last_nested_summarize_level_and_event = [current_level, event]
+
+            elif event.event_name == "_initiate_chat max_turns":
+
+                # Maximum turns hit, add a label to the current agent
+                _add_agent_info_loop_edge(current_level, current_agent, f"Max turns hit ({event.json_state['turns']})")
+
             else:
                 pass
 
@@ -513,13 +658,26 @@ events = {}
 invocations = {}
 all_ordered = []
 
-# session_id = load_log_file('./autogen_logs/20240904_035445_runtime_nested_chat.log', clients, agents, events, invocations, all_ordered)
-session_id = load_log_file('./autogen_logs/20240907_005404_runtime_function_call.log', clients, agents, events, invocations, all_ordered)
 
 # Print the extracted information
-print(f"\n\nSession ID: {session_id}")
+#print(f"\n\nSession ID: {session_id}")
 
 for object in all_ordered:
     print(object)
 
-visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_function_call', 'svg', all_ordered, clients, agents, events, invocations)
+# session_id = load_log_file('./autogen_logs/20240904_035445_runtime_nested_chat.log', clients, agents, events, invocations, all_ordered)
+
+# session_id = load_log_file('./autogen_logs/20240908_040602_runtime_function_call.log', clients, agents, events, invocations, all_ordered)
+# visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_function_call', 'svg', all_ordered, clients, agents, events, invocations)
+
+# session_id = load_log_file('./autogen_logs/20240908_050458_runtime_dual_function_call.log', clients, agents, events, invocations, all_ordered)
+# visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_dual_function_call', 'svg', all_ordered, clients, agents, events, invocations)
+
+# session_id = load_log_file('./autogen_logs/20240908_042901_runtime_terminate.log', clients, agents, events, invocations, all_ordered)
+# visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_terminate', 'svg', all_ordered, clients, agents, events, invocations)
+
+# session_id = load_log_file('./autogen_logs/20240908_051130_runtime_max_turns.log', clients, agents, events, invocations, all_ordered)
+# visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_max_turns', 'svg', all_ordered, clients, agents, events, invocations)
+
+session_id = load_log_file('./autogen_logs/20240908_185246_runtime_chess.log', clients, agents, events, invocations, all_ordered)
+visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_chess', 'svg', all_ordered, clients, agents, events, invocations)
