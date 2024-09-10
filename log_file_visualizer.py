@@ -1,4 +1,5 @@
 import json
+from uuid import uuid4
 from typing import Any, Dict, List, Optional, Union, Callable
 from datetime import datetime
 from graphviz import Digraph
@@ -261,8 +262,21 @@ def load_log_file(file_and_path: str, clients: Dict, agents: Dict, events: Dict,
 def visualize_execution(diagram_name: str, directory: str, filename: str, format: str, all_ordered: List, clients: Dict, agents: Dict[int, LogAgent], events: Dict, invocations: Dict):
     '''Create the diagram of the program execution'''
 
+    standard_canvas_bg_color = "#222222"
+    standard_nested_bg_color = "#08004F"
+    standard_groupchat_bg_color= "#004F4F"
     standard_fill_color = "#EEEEEE"
     standard_border_color = "#AAAAAA"
+    standard_font_color = "#FAFAFA"
+    standard_node_font_color = "#222222"
+    standard_edge_color = "#AAAAFF"
+    standard_fontname="Helvetica, DejaVu Sans, Arial, sans-serif"
+    standard_label_distance="5.0"
+    standard_node_shape_agent="egg"
+    standard_node_shape_summary="parallelogram"
+    standard_node_shape_terminate="octagon"
+    standard_node_shape_invocation="invhouse"
+    standard_node_shape_info="note"
 
     def _assign_agent_color(agent_colors, agent_id) -> str:
         """Assigns a color to an agent in a deterministic order.
@@ -308,12 +322,14 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
             
         raise Exception(f"Unknown agent, name: {agent_name}")
     
-    def _client_by_id(client_id: int) -> LogClient:
-        """Retrieves a client by id"""
+    def _client_by_id(client_id: int, wrapper_id: int) -> LogClient:
+        """Retrieves a client by id. If it can't find it, look up a client based on the wrapper_id"""
         if client_id in clients:
             return clients[client_id]
+        elif wrapper_id in wrapper_clients:
+            return clients[wrapper_clients[wrapper_id][0]] # Return the first client in the wrapper
         else:
-            raise Exception(f"Unknown client, id: {client_id}")
+            raise Exception(f"Unknown client, id: {client_id}. Additionally, can't find other clients with wrapper_id: {wrapper_id}")
     
     def _get_agent_node_id(agent: LogAgent) -> str:
         """Gets the unique node id for an agent node"""
@@ -330,31 +346,40 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
         # Add the node to the diagram
         color = agent.visualization_params["color"]
-        dot.node(node_id, agent.agent_name, shape='egg', color=_darken_color(color, 0.2), style='filled', fillcolor=color)
+        dot.node(node_id, f"{agent.agent_name} ({agent.visualization_params['index']})", shape=standard_node_shape_agent, color=_darken_color(color, 0.2), style='filled', fillcolor=color, fontcolor=standard_node_font_color, fontname=standard_fontname)
 
     def _add_node_summary(dot: Digraph, event: LogEvent):
         """Add a summary node to the diagram"""
         
-        dot.node(event.event_id, "Summarize", shape="parallelogram", color=standard_border_color, style='filled', fillcolor=standard_fill_color)
+        dot.node(event.event_id, "Summarize", shape=standard_node_shape_summary, color=standard_border_color, style='filled', fillcolor=standard_fill_color, fontcolor=standard_node_font_color, fontname=standard_fontname)
 
     def _add_node_terminate(dot: Digraph, event: LogEvent):
         """Add a termination node to the diagram"""
 
-        dot.node(event.event_id, "Termination", shape="octagon", color=standard_border_color, style='filled', fillcolor=standard_fill_color)
+        dot.node(event.event_id, "Termination", shape=standard_node_shape_terminate, color=standard_border_color, style='filled', fillcolor=standard_fill_color, fontcolor=standard_node_font_color, fontname=standard_fontname)
 
     def _add_node_event_reply_func_executed(dot: Digraph, event: LogEvent, event_name: str, shape_name: str):
         """Add an event node to the diagram"""
 
-        dot.node(event.event_id, event_name, shape=shape_name, color=standard_border_color, style='filled', fillcolor=standard_fill_color)
+        dot.node(event.event_id, event_name, shape=shape_name, color=standard_border_color, style='filled', fillcolor=standard_fill_color, fontcolor=standard_node_font_color, fontname=standard_fontname)
 
     def _add_node_invocation(dot: Digraph, invocation: LogInvocation):
         """Add an invocation node to the diagram"""
 
-        client_name = _client_by_id(invocation.client_id).class_name
+        client_name = _client_by_id(invocation.client_id, invocation.wrapper_id).class_name
 
-        dot.node(invocation.invocation_id, client_name, shape='invhouse', color=standard_border_color, style='filled', fillcolor=standard_fill_color)
+        dot.node(invocation.invocation_id, client_name, shape=standard_node_shape_invocation, color=standard_border_color, style='filled', fillcolor=standard_fill_color, fontcolor=standard_node_font_color, fontname=standard_fontname)
 
-    def _add_agent_to_agent_edge(dot: Digraph, sender_agent: LogAgent, recipient_agent: LogAgent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
+    def _add_node_info(dot: Digraph, event_name: str) -> str:
+        """Add an info node to the diagram an returns the name of the node"""
+
+        new_id = str(uuid4())
+
+        dot.node(new_id, event_name, shape=standard_node_shape_info, color=standard_border_color, style='filled', fillcolor=standard_fill_color, fontcolor=standard_node_font_color, fontname=standard_fontname)
+
+        return new_id
+
+    def _add_agent_to_agent_edge(dot: Digraph, sender_agent: LogAgent, recipient_agent: LogAgent, edge_text: str, tooltip_text: str = "", href_text: str = "", dir: str = "forward"):
         """Adds an edge between nodes"""
 
         # Ensure the agent nodes exist (e.g. they aren't index 0)
@@ -364,55 +389,67 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
         if recipient_agent.visualization_params['index'] == 0:
             _add_node_agent(dot, recipient_agent)
 
-        dot.edge(_get_agent_node_id(sender_agent), _get_agent_node_id(recipient_agent), label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
+        dot.edge(_get_agent_node_id(sender_agent), _get_agent_node_id(recipient_agent), label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, dir=dir, labeldistance=standard_label_distance, fontcolor=standard_font_color, color=standard_edge_color, fontname=standard_fontname)
 
     def _add_agent_to_event_edge(dot: Digraph, agent: LogAgent, event: LogEvent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
         """Adds an edge between an agent and an event"""
 
-        dot.edge(_get_agent_node_id(agent), event.event_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
+        dot.edge(_get_agent_node_id(agent), event.event_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance=standard_label_distance, fontcolor=standard_font_color, color=standard_edge_color, fontname=standard_fontname)
 
     def _add_event_to_event_edge(dot: Digraph, event_one: LogEvent, event_two: LogEvent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
         """Adds an edge between two events"""
 
-        dot.edge(event_one.event_id, event_two.event_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
+        dot.edge(event_one.event_id, event_two.event_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance=standard_label_distance, fontcolor=standard_font_color, color=standard_edge_color, fontname=standard_fontname)
+
+    def _add_event_to_node_edge(dot: Digraph, event: LogEvent, node_id: str, edge_text: str, tooltip_text: str = "", href_text: str = ""):
+        """Adds an edge between an event and a node"""
+
+        dot.edge(event.event_id, node_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance=standard_label_distance, fontcolor=standard_font_color, color=standard_edge_color, fontname=standard_fontname)
 
     def _add_event_to_agent_edge(dot: Digraph, event: LogEvent, agent: LogAgent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
         """Adds an edge between an event and an agent"""
 
-        eventid = event.event_id  # TEMP 
-        agentid = _get_agent_node_id(agent) # TEMP
-        dot.edge(event.event_id, _get_agent_node_id(agent), label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
+        dot.edge(event.event_id, _get_agent_node_id(agent), label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance=standard_label_distance, fontcolor=standard_font_color, color=standard_edge_color, fontname=standard_fontname)
 
     def _add_invocation_to_agent_return_edge(dot: Digraph, agent: LogAgent, invocation: LogInvocation, edge_text: str, tooltip_text: str = "", href_text: str = ""):
         """Adds an edge between agent and invocation and a return edge"""
 
-        dot.edge(_get_agent_node_id(agent), invocation.invocation_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
-        dot.edge(invocation.invocation_id, _get_agent_node_id(agent))
+        dot.edge(_get_agent_node_id(agent), invocation.invocation_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance=standard_label_distance, fontcolor=standard_font_color, color=standard_edge_color, fontname=standard_fontname)
+        dot.edge(invocation.invocation_id, _get_agent_node_id(agent), color=standard_edge_color)
 
     def _add_invocation_to_event_return_edge(dot: Digraph, event: LogEvent, invocation: LogInvocation, edge_text: str, tooltip_text: str = "", href_text: str = ""):
         """Adds an edge between event and invocation and a return edge"""
 
-        dot.edge(event.event_id, invocation.invocation_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
-        dot.edge(invocation.invocation_id, event.event_id)
+        dot.edge(event.event_id, invocation.invocation_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance=standard_label_distance, fontcolor=standard_font_color, color=standard_edge_color, fontname=standard_fontname)
+        dot.edge(invocation.invocation_id, event.event_id, color=standard_edge_color)
 
     def _add_event_to_agent_return_edge(dot: Digraph, agent: LogAgent, event: LogEvent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
         """Adds an edge between agent and invocation and a return edge"""
 
-        dot.edge(_get_agent_node_id(agent), event.event_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance='5.0')
-        dot.edge(event.event_id, _get_agent_node_id(agent))
+        dot.edge(_get_agent_node_id(agent), event.event_id, label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, labeldistance=standard_label_distance, fontcolor=standard_font_color, color=standard_edge_color, fontname=standard_fontname)
+        dot.edge(event.event_id, _get_agent_node_id(agent), color=standard_edge_color)
 
     def _add_invocation_to_event_edge(dot: Digraph, event: LogEvent, invocation: LogInvocation, label: str):
         """Adds an edge between an event and an invocation"""
         
-        dot.edge(event.event_id, invocation.invocation_id, label)
+        dot.edge(event.event_id, invocation.invocation_id, label, color=standard_edge_color)
 
     def _add_agent_info_loop_edge(dot: Digraph, agent: LogAgent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
         """Adds an information-only loop edge to/from an agent"""
 
-        dot.edge(_get_agent_node_id(agent), _get_agent_node_id(agent), label=edge_text)
+        dot.edge(_get_agent_node_id(agent), _get_agent_node_id(agent), label=edge_text, color=standard_edge_color)
+
+    def create_nested_digraph(nested_chat_node_name: str, label: str, color: str) -> Digraph:
+        """Creates a nested digraph"""
+        
+        nested_graph = Digraph(nested_chat_node_name)
+        nested_graph.attr(style='rounded, filled', color=color, fillcolor=_darken_color(color), label=label, labeljust="r", labelloc="b", penwidth="2", margin="30", fontcolor=standard_font_color, fontname=standard_fontname)
+
+        return nested_graph
         
     # Create a Digraph object
     dot = Digraph(comment=diagram_name)
+    dot.attr(bgcolor=standard_canvas_bg_color)
 
     # Current level of the diagram (supports nested diagrams)
     current_level: Digraph = dot
@@ -435,17 +472,30 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
     last_termination: LogEvent = None
 
     # Last nested chat summarise node
-    last_nested_summarize_level_and_event: [Digraph, LogEvent] = None
+    last_nested_summarize_level_and_event: List[Digraph, LogEvent] = None
 
     # Available invocation (invocations occur before the event that ran them, so we keep it and connect it to the following event)
     available_invocations = []
+
+    # Keep track of wrapper_ids and client_ids, this can help us reconcile when a client_id doesn't exist we can use a previous client with the same wrapper
+    wrapper_clients: Dict[int, List] = {}
 
     # Summary nodes, no ids so 
 
     # Run through all execution points in the log, in order of execution
     for i, item in enumerate(all_ordered):
 
-        if isinstance(item, LogAgent):
+        if isinstance(item, LogClient):
+            client: LogClient = item
+
+            # For each client, add the client_id to the wrapper dictionary so we can resolve any client_ids that don't appear in the log file
+            # Can occur with group chat's inner auto speaker select chat
+            if client.wrapper_id in wrapper_clients:
+                wrapper_clients[client.wrapper_id].append(client.client_id)
+            else:
+                wrapper_clients[client.wrapper_id] = [client.client_id]
+
+        elif isinstance(item, LogAgent):
             agent: LogAgent = agents[item.id]
 
             # Assign an number to the agent as we'll be repeating the agent throughout the diagram
@@ -460,7 +510,7 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
             #agent_color = agent_colors[agent.id]
 
-            #dot.node(str(i), agent.agent_name, shape='egg', color=_darken_color(agent_color), style='filled', fillcolor=agent_color)
+            #dot.node(str(i), agent.agent_name, shape=standard_node_shape_agent, color=_darken_color(agent_color), style='filled', fillcolor=agent_color)
 
         elif isinstance(item, LogEvent):
 
@@ -486,7 +536,8 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
                         _add_node_agent(current_level, sender_agent)
 
                         # Then link the parent to this sender node
-                        _add_agent_to_agent_edge(nested_parent_graphs[nested_chats[current_nested_chat_id]["level_index"]], agents[nested_chats[current_nested_chat_id]["parent_agent_node_id"]], sender_agent, "Nested Chat")
+                        is_group_chat = nested_chats[current_nested_chat_id]["type"] == "Group Chat"
+                        _add_agent_to_agent_edge(nested_parent_graphs[nested_chats[current_nested_chat_id]["level_index"]], agents[nested_chats[current_nested_chat_id]["parent_agent_node_id"]], sender_agent, nested_chats[current_nested_chat_id]["edge_label"], dir="both" if is_group_chat else "forward")
 
                     nested_chats[current_nested_chat_id]["linked_to_parent_agent_node"] = True
 
@@ -519,12 +570,6 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
                 if event.json_state["final"]:
                     # Get the name of the function
                     reply_func_name = event.json_state["reply_func_name"]
-
-                    # Add it as a point node
-                    # _add_node_event_reply_func_executed(dot, event, reply_func_name)
-
-                    # Link it to the current agent
-                    # _add_agent_to_event_edge(dot, current_agent, event, reply_func_name)
 
                     # Specific function handling
                     if reply_func_name == "check_termination_and_human_reply":
@@ -569,10 +614,11 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
                 # Moving down into a nested chat
                 current_level_index = current_level_index + 1
                 nested_chat_node_name = 'cluster_' + str(current_level_index)
-                new_nested = Digraph(nested_chat_node_name)  # Use 'cluster_' to treat it as a subgraph
+                new_nested = create_nested_digraph(nested_chat_node_name=nested_chat_node_name, label="Nested Chat", color=standard_nested_bg_color)
+                # new_nested = Digraph(nested_chat_node_name)  # Use 'cluster_' to treat it as a subgraph
                 
                 # Style the subgraph
-                new_nested.attr(style='rounded, filled', color='#EEF7FF', fillcolor=_darken_color('#EEF7FF'), label="Nested Chat", labeljust="r", labelloc="b", penwidth="2", margin="30")
+                # new_nested.attr(style='rounded, filled', color=standard_nested_bg_color, fillcolor=_darken_color(standard_nested_bg_color), label="Nested Chat", labeljust="r", labelloc="b", penwidth="2", margin="30", fontcolor=standard_font_color, fontname=standard_fontname)
 
                 # Track parent and current graphs
                 nested_parent_graphs[current_level_index] = current_level
@@ -581,6 +627,8 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
                 # Keep track of this nested chat by id
                 # and the parent node
                 nested_chats[nested_chat_id] = {
+                    "type": "Nested Chat",
+                    "edge_label": "Nested Chat", # nested or group chat
                     "level_index": current_level_index,
                     "parent_agent_node_id": _agent_id_by_name(event.source_name),
                     "nested_chat_node_name": nested_chat_node_name,
@@ -604,6 +652,45 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
                 # Move back to the parent
                 current_level = nested_parent_graphs[current_level_index]
 
+            elif event.event_name == "_auto_select_speaker start":
+
+                # MS TEMP - TRY TO USE SAME AS NESTED CHAT CODE
+                nested_chat_id = event.json_state['auto_select_speaker_id']
+
+                # Moving down into a nested chat
+                current_level_index = current_level_index + 1
+                nested_chat_node_name = 'cluster_' + str(current_level_index)
+                new_nested = create_nested_digraph(nested_chat_node_name=nested_chat_node_name, label="Group Chat Auto Select Speaker", color=standard_groupchat_bg_color)
+
+                # Track parent and current graphs
+                nested_parent_graphs[current_level_index] = current_level
+                nested_graphs[current_level_index] = new_nested
+
+                # Keep track of this nested chat by id
+                # and the parent node
+                nested_chats[nested_chat_id] = {
+                    "type": "Group Chat",
+                    "edge_label": "Auto Select Speaker", # nested or group chat
+                    "level_index": current_level_index,
+                    "parent_agent_node_id": _agent_id_by_name(event.source_name),
+                    "nested_chat_node_name": nested_chat_node_name,
+                    "linked_to_parent_agent_node": False # Whether wwe have linked to the parent agent node
+                    }
+
+                # Move to the new level
+                current_level = new_nested
+                
+                nested_parents[nested_chat_id] = current_nested_chat_id
+                current_nested_chat_id = nested_chat_id
+                
+            elif event.event_name == "_auto_select_speaker end":
+
+                # Moving up out of a nested chat, add the graph to the parent one
+                nested_parent_graphs[current_level_index].subgraph(current_level)
+
+                # Move back to the parent
+                current_level = nested_parent_graphs[current_level_index]
+
             elif event.event_name == "_reflection_with_llm_as_summary" or event.event_name == "_last_msg_as_summary":
                     
                 # Add summary node
@@ -611,9 +698,9 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
                 # Link it to the agent or termination (which ever is later)
                 if last_termination is not None and last_termination.timestamp > current_agent.current_timestamp:
-                    _add_event_to_event_edge(current_level, last_termination, event, event.event_name)
+                    _add_event_to_event_edge(current_level, last_termination, event, event.event_name, event.json_state['summary'])
                 else:
-                    _add_agent_to_event_edge(current_level, current_agent, event, event.event_name)
+                    _add_agent_to_event_edge(current_level, current_agent, event, event.event_name, event.json_state['summary'])
 
                 # If we have available invocations, add them to the agent in a return sequence
                 if len(available_invocations) > 0:
@@ -622,6 +709,11 @@ def visualize_execution(diagram_name: str, directory: str, filename: str, format
 
                     # Once added, we clear the available invocations
                     available_invocations.clear()
+
+                # If we're at the final stage of a group chat auto select speaker, show the name of the agent selected
+                if current_level.name is not None and current_nested_chat_id in nested_chats and nested_chats[current_nested_chat_id]["type"] == "Group Chat":
+                    node_id = _add_node_info(current_level, event.json_state['summary'])
+                    _add_event_to_node_edge(current_level, event, node_id, "next speaker")
 
                 # Track last summarize event so we can connect it to the outside
                 # of the nested chat
@@ -680,8 +772,17 @@ for object in all_ordered:
 # session_id = load_log_file('./autogen_logs/20240908_042901_runtime_terminate.log', clients, agents, events, invocations, all_ordered)
 # visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_terminate', 'svg', all_ordered, clients, agents, events, invocations)
 
-session_id = load_log_file('./autogen_logs/20240908_051130_runtime_max_turns.log', clients, agents, events, invocations, all_ordered)
-visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_max_turns', 'svg', all_ordered, clients, agents, events, invocations)
+# session_id = load_log_file('./autogen_logs/20240908_051130_runtime_max_turns.log', clients, agents, events, invocations, all_ordered)
+# visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_max_turns', 'svg', all_ordered, clients, agents, events, invocations)
 
 # session_id = load_log_file('./autogen_logs/20240908_185246_runtime_chess.log', clients, agents, events, invocations, all_ordered)
 # visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_chess', 'svg', all_ordered, clients, agents, events, invocations)
+
+# session_id = load_log_file('./autogen_logs/20240909_091217_runtime_groupchat_debate-SHORT.log', clients, agents, events, invocations, all_ordered)
+# visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_groupchat_debate', 'svg', all_ordered, clients, agents, events, invocations)
+
+# session_id = load_log_file('./autogen_logs/20240909_225202_runtime_dlcourse.log', clients, agents, events, invocations, all_ordered)
+# visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_dlcourse', 'svg', all_ordered, clients, agents, events, invocations)
+
+session_id = load_log_file('./autogen_logs/20240909_234743_notebook_research_multiagent_groupchat.log', clients, agents, events, invocations, all_ordered)
+visualize_execution('Visualize!', 'ms_graphviz/diagrams', 'diagram_notebook_research_multiagent_groupchat', 'svg', all_ordered, clients, agents, events, invocations)
