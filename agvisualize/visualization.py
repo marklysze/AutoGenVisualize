@@ -10,7 +10,8 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
     '''Create the diagram of the program execution'''
 
     design_config: Dict = {
-        "canvas_bg": "#123456", # This colour will be replaced by "url(#bg_pattern)" which is a pattern defined in the SVG (added post-creation). Colour should be unique.
+        "canvas_replace_bg": "#123456", # This colour will be replaced by "url(#bg_pattern)" which is a pattern defined in the SVG (added post-creation). Colour should be unique.
+        "canvas_pattern_bg": "#222222",
         "canvas_pattern_color": "#2A2A2A",
         "nested_bg": "#18184F",
         "groupchat_bg": "#004F4F",
@@ -290,7 +291,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
 
     # Initialize the main diagram
     dot = Digraph(comment=diagram_name)
-    dot.attr(bgcolor=design_config["canvas_bg"])
+    dot.attr(bgcolor=design_config["canvas_replace_bg"])
 
     clients: Dict[int, LogClient] = {}
     agents: Dict[int, LogAgent] = {}
@@ -324,7 +325,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
         # post-visualisation, add background definition
 
         # new_content = '<pattern height="12" id="bg_pattern" patternUnits="userSpaceOnUse" width="15"><circle cx="5" cy="5" fill="' + design_config["canvas_pattern_color"] + '" r="3" /></pattern>'
-        background_pattern = '<defs><pattern height="40" width="40" id="bg_pattern" patternUnits="userSpaceOnUse" width="100"><circle cx="15" cy="15" r="14" stroke="' + design_config["canvas_pattern_color"] + '" stroke-width="1" fill="none" /><text x="7" y="19" font-family="Arial" font-size="12" fill="' + design_config["canvas_pattern_color"] + '">AG</text></pattern></defs>'
+        background_pattern = '<pattern height="40" width="40" id="bg_pattern" patternUnits="userSpaceOnUse"><rect x="0" y="0" width="40" height="40" fill="' + design_config["canvas_pattern_bg"] + '" /><circle cx="15" cy="15" r="14" stroke="' + design_config["canvas_pattern_color"] + '" stroke-width="1" fill="none" /><text x="7" y="19" font-family="Arial" font-size="12" fill="' + design_config["canvas_pattern_color"] + '">AG</text></pattern>'
         post_svg(design_config, directory, filename + ".svg", background_pattern)
 
 def post_svg(design_config: Dict, directory: str, filename: str, background_pattern: str):
@@ -349,7 +350,7 @@ def post_svg(design_config: Dict, directory: str, filename: str, background_patt
         updated_svg = svg_content[:insert_position] + background_pattern + svg_content[insert_position:]
 
     # Update the background fill
-    updated_svg = updated_svg.replace(design_config["canvas_bg"], "url(#bg_pattern)")
+    updated_svg = updated_svg.replace(design_config["canvas_replace_bg"], "url(#bg_pattern)")
     
     # Write the updated SVG content to a new file or overwrite the original
     output_file = directory + "/" + filename
