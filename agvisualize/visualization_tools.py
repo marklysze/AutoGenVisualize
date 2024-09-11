@@ -36,7 +36,9 @@ __all__ = [
     '_add_start_to_agent_edge',
     '_add_invocation_to_event_edge',
     '_add_agent_info_loop_edge',
-    '_create_tooltip'
+    '_create_tooltip',
+    'truncate_string',
+    'extract_invocation_response'
 ]
 
 def _assign_agent_color(agent_colors, agent_id) -> str:
@@ -118,7 +120,7 @@ def _get_agent_node_id(agent: LogAgent) -> str:
 
 def _add_node_start(design_config: Dict, dot: Digraph):
 
-    dot.node("start", "Start", color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"])
+    dot.node("start", "START", color=design_config["start_border_color"], style='filled', fillcolor=design_config["start_bg"], fontcolor=design_config["start_font_color"], fontname=design_config["font_names"], penwidth=design_config["node_pen_width"])
 
 def _add_node_agent(design_config: Dict, agents: Dict[int, LogAgent], dot: Digraph, agent: LogAgent):
     """Add an agent node to the diagram"""
@@ -137,7 +139,7 @@ def _add_node_agent(design_config: Dict, agents: Dict[int, LogAgent], dot: Digra
 
     # Add the node to the diagram
     color = agent.visualization_params["color"]
-    dot.node(node_id, f"{agent.agent_name} ({agent.visualization_params['index']})", shape=design_config["node_shape"]["agent"], color=_darken_color(color, 0.2), style='filled', fillcolor=color, fontcolor=design_config["node_font_color"], fontname=design_config["font_names"])
+    dot.node(node_id, f"{agent.agent_name} ({agent.visualization_params['index']})", shape=design_config["node_shape"]["agent"], color=_darken_color(color, 0.2), style='filled', fillcolor=color, fontcolor=design_config["node_font_color"], fontname=design_config["font_names"], penwidth=design_config["node_pen_width"])
 
     if starting_point:
         # Link the start to the agent
@@ -181,7 +183,7 @@ def _add_node_info(design_config: Dict, dot: Digraph, event_name: str) -> str:
 
     return new_id
 
-def _add_agent_to_agent_edge(design_config: Dict, agents: Dict[int, LogAgent], dot: Digraph, sender_agent: LogAgent, recipient_agent: LogAgent, edge_text: str, tooltip_text: str = "", href_text: str = "", dir: str = "forward"):
+def _add_agent_to_agent_edge(design_config: Dict, agents: Dict[int, LogAgent], dot: Digraph, sender_agent: LogAgent, recipient_agent: LogAgent, edge_text: str, tooltip_text: str = "", href_text: str = "", dir: str = "forward", style: str = "solid"):
     """Adds an edge between nodes"""
 
     # Ensure the agent nodes exist (e.g. they aren't index 0)
@@ -191,7 +193,7 @@ def _add_agent_to_agent_edge(design_config: Dict, agents: Dict[int, LogAgent], d
     if recipient_agent.visualization_params['index'] == 0:
         _add_node_agent(dot, recipient_agent)
 
-    dot.edge(_get_agent_node_id(sender_agent), _get_agent_node_id(recipient_agent), label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, dir=dir, labeldistance=design_config["label_distance"], fontcolor=design_config["font_color"], color=design_config["edge_color"], fontname=design_config["font_names"])
+    dot.edge(_get_agent_node_id(sender_agent), _get_agent_node_id(recipient_agent), label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, dir=dir, labeldistance=design_config["label_distance"], fontcolor=design_config["font_color"], color=design_config["edge_color"], fontname=design_config["font_names"], style=style)
 
 def _add_agent_to_event_edge(design_config: Dict, dot: Digraph, agent: LogAgent, event: LogEvent, edge_text: str, tooltip_text: str = "", href_text: str = ""):
     """Adds an edge between an agent and an event"""
@@ -266,3 +268,24 @@ def _create_tooltip(message):
         return tooltip_text
     else:
         return "Unable to create tooltip"
+
+def truncate_string(string, max_length):
+    """Keeps string lengths to a max length"""
+    if len(string) <= max_length:
+        return string
+    else:
+        return string[:max_length-3] + "..."
+    
+def extract_invocation_response(invocation: LogInvocation) -> str:
+    """Extract an invocation's response and return as a string"""
+
+    if "ChatCompletionMessage" in invocation.response:
+        pattern = r'ChatCompletionMessage\(content=(\'|")(.+?)(?<!\\)\1(?=,\s*refusal)'
+        match = re.search(pattern, invocation.response, re.DOTALL)
+        if match:
+            content = match.group(2)
+            # Unescape quotes and newlines
+            content = content.replace('\\"', '"').replace("\\'", "'").replace('\\n', '\n')
+            return content
+        
+    return str(invocation.response)
