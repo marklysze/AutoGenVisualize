@@ -10,17 +10,17 @@
 <title>%3</title>
 <polygon fill="url(#bg_pattern)" stroke="transparent" points="-4,4 -4,-2246 2591.68,-2246 2591.68,4 -4,4"/>
 <g id="clust1" class="cluster">
-<title>cluster_464873a0&#45;4e33&#45;4603&#45;a579&#45;4f47b0c3670c</title>
+<title>cluster_d342e477&#45;b45e&#45;46dc&#45;85b1&#45;aa6016bc2592</title>
 <path fill="#18184f" stroke="#000035" stroke-width="5" d="M180.68,-1528C180.68,-1528 533.68,-1528 533.68,-1528 539.68,-1528 545.68,-1534 545.68,-1540 545.68,-1540 545.68,-1993 545.68,-1993 545.68,-1999 539.68,-2005 533.68,-2005 533.68,-2005 180.68,-2005 180.68,-2005 174.68,-2005 168.68,-1999 168.68,-1993 168.68,-1993 168.68,-1540 168.68,-1540 168.68,-1534 174.68,-1528 180.68,-1528"/>
 <text text-anchor="middle" x="494.68" y="-1535.8" font-family="Helvetica, DejaVu Sans, Arial, sans-serif" font-size="14.00" fill="#fafafa">Nested Chat</text>
 </g>
 <g id="clust2" class="cluster">
-<title>cluster_ae443b80&#45;5aa4&#45;4ff5&#45;b0b3&#45;1d069a04a7a0</title>
+<title>cluster_ad23093b&#45;51e6&#45;463b&#45;bf5a&#45;a62bcabdbaa5</title>
 <path fill="#18184f" stroke="#000035" stroke-width="5" d="M911.68,-933C911.68,-933 1264.68,-933 1264.68,-933 1270.68,-933 1276.68,-939 1276.68,-945 1276.68,-945 1276.68,-1398 1276.68,-1398 1276.68,-1404 1270.68,-1410 1264.68,-1410 1264.68,-1410 911.68,-1410 911.68,-1410 905.68,-1410 899.68,-1404 899.68,-1398 899.68,-1398 899.68,-945 899.68,-945 899.68,-939 905.68,-933 911.68,-933"/>
 <text text-anchor="middle" x="1225.68" y="-940.8" font-family="Helvetica, DejaVu Sans, Arial, sans-serif" font-size="14.00" fill="#fafafa">Nested Chat</text>
 </g>
 <g id="clust3" class="cluster">
-<title>cluster_ef6bd405&#45;3fbe&#45;49be&#45;8452&#45;3b1bee4410d8</title>
+<title>cluster_01bc31ff&#45;b422&#45;4598&#45;8fbd&#45;12efe1a617c4</title>
 <path fill="#18184f" stroke="#000035" stroke-width="5" d="M1622.68,-338C1622.68,-338 1975.68,-338 1975.68,-338 1981.68,-338 1987.68,-344 1987.68,-350 1987.68,-350 1987.68,-803 1987.68,-803 1987.68,-809 1981.68,-815 1975.68,-815 1975.68,-815 1622.68,-815 1622.68,-815 1616.68,-815 1610.68,-809 1610.68,-803 1610.68,-803 1610.68,-350 1610.68,-350 1610.68,-344 1616.68,-338 1622.68,-338"/>
 <text text-anchor="middle" x="1936.68" y="-345.8" font-family="Helvetica, DejaVu Sans, Arial, sans-serif" font-size="14.00" fill="#fafafa">Nested Chat</text>
 </g>
@@ -786,5 +786,5 @@
 </g>
 </g>
 </g>
-<defs><defs><pattern height="40" width="40" id="bg_pattern" patternUnits="userSpaceOnUse"><circle cx="15" cy="15" r="14" stroke="#2A2A2A" stroke-width="1" fill="none" /><text x="7" y="19" font-family="Arial" font-size="12" fill="#2A2A2A">AG</text></pattern></defs></defs>
+<defs><pattern height="40" width="40" id="bg_pattern" patternUnits="userSpaceOnUse"><rect x="0" y="0" width="40" height="40" fill="#222222" /><circle cx="15" cy="15" r="14" stroke="#2A2A2A" stroke-width="1" fill="none" /><text x="7" y="19" font-family="Arial" font-size="12" fill="#2A2A2A">AG</text></pattern></defs>
 </svg>
