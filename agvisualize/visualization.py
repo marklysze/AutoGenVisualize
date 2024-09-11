@@ -1,6 +1,7 @@
 from typing import Dict, List
 from uuid import uuid4
 from graphviz import Digraph
+import xml.etree.ElementTree as ET
 from agvisualize.visualization_tools import *
 from agvisualize.log_data import LogAgent, LogEvent, LogClient, LogInvocation, LogSession
 from agvisualize.log_processing import load_log_file
@@ -9,9 +10,13 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
     '''Create the diagram of the program execution'''
 
     design_config: Dict = {
-        "canvas_bg": "#222222",
-        "nested_bg": "#08004F",
+        "canvas_bg": "#123456", # This colour will be replaced by "url(#bg_pattern)" which is a pattern defined in the SVG (added post-creation). Colour should be unique.
+        "canvas_pattern_color": "#2A2A2A",
+        "nested_bg": "#18184F",
         "groupchat_bg": "#004F4F",
+        "start_bg": "#222222",
+        "start_font_color": "#FFFFFF",
+        "start_border_color": "#6666FF",
         "fill_color": "#EEEEEE",
         "border_color": "#AAAAAA",
         "font_color": "#FAFAFA",
@@ -19,10 +24,13 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
         "edge_color": "#AAAAFF",
         "edge_success_color": "#00FF00",
         "edge_unsuccessful_color": "#FF0000",
+        "edge_style": "solid",
+        "edge_style_silent": "dashed",
         "font_names": "Helvetica, DejaVu Sans, Arial, sans-serif",
         "label_distance": "5.0",
+        "node_pen_width": "3.0",
         "node_shape": {
-            "agent": "egg",
+            "agent": "oval",
             "summary": "parallelogram",
             "terminate": "octagon",
             "invocation": "invhouse",
@@ -49,7 +57,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
     def create_nested_digraph(nested_chat_node_name: str, label: str, color: str) -> Digraph:
         """Creates a nested digraph"""
         nested_graph = Digraph(nested_chat_node_name)
-        nested_graph.attr(style='rounded, filled', color=color, fillcolor=_darken_color(color), label=label, labeljust="r", labelloc="b", penwidth="2", margin="30", fontcolor=design_config["font_color"], fontname=design_config["font_names"])
+        nested_graph.attr(style='rounded, filled', color=_darken_color(color, 0.1), fillcolor=color, label=label, labeljust="r", labelloc="b", penwidth="5", margin="35", fontcolor=design_config["font_color"], fontname=design_config["font_names"])
         return nested_graph
     
     def process_level(top_level: bool, current_level: Digraph, level_id, items: List, start_index: int, current_nested_chat_id: str, parent_agent: LogAgent) -> int:
@@ -119,6 +127,17 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
                     return i+1, current_agent
 
                 elif event.event_name == "received_message":
+
+                    '''
+                    # If we want to ignore silent events, however we do need to show some.
+                    if "silent" in event.json_state and event.json_state["silent"] == True:
+                        # Ignore silent messages
+                        i += 1
+                        continue
+                    '''
+
+                    is_silent = "silent" in event.json_state and event.json_state["silent"] == True
+
                     sender_agent = agents[_agent_id_by_name(agents, event.json_state["sender"])]
                     recipient_agent = agents[_agent_id_by_name(agents, event.source_name)]
 
@@ -137,7 +156,8 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
                                 agents[nested_chats[current_nested_chat_id]["parent_agent_node_id"]], 
                                 sender_agent, 
                                 nested_chats[current_nested_chat_id]["edge_label"], 
-                                dir="both" if is_group_chat else "forward"
+                                dir="both" if is_group_chat else "forward",
+                                style=design_config["edge_style" if not is_silent else "edge_style_silent"]
                             )
                         nested_chats[current_nested_chat_id]["linked_to_parent_agent_node"] = True
                     elif last_nested_agent is not None and last_nested_agent.id == sender_agent.id:
@@ -147,7 +167,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
 
                     edge_text = event.event_name
                     tooltip_text = _create_tooltip(event.json_state["message"])
-                    _add_agent_to_agent_edge(design_config, agents, current_level, sender_agent, recipient_agent, edge_text, tooltip_text)
+                    _add_agent_to_agent_edge(design_config, agents, current_level, sender_agent, recipient_agent, edge_text, tooltip_text, style=design_config["edge_style" if not is_silent else "edge_style_silent"])
 
                     current_agent = recipient_agent
                 
@@ -197,7 +217,10 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
                         # If we have available invocations, add them to the agent in a return sequence
                         if len(available_invocations) > 0:
                             for invocation in available_invocations:
-                                _add_invocation_to_agent_return_edge(design_config, current_level, current_agent, invocation, reply_func_name)
+                                # Add them to the source agent
+                                source_agent = agents[_agent_id_by_name(agents, event.source_name)]
+
+                                _add_invocation_to_agent_return_edge(design_config, current_level, source_agent, invocation, reply_func_name, extract_invocation_response(invocation))
 
                             # Once added, we clear the available invocations
                             available_invocations.clear()
@@ -233,7 +256,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
 
                     # If we're at the final stage of a group chat auto select speaker, show the name of the agent selected
                     if current_level.name is not None and current_nested_chat_id in nested_chats and nested_chats[current_nested_chat_id]["type"] == "Group Chat":
-                        node_id = _add_node_info(design_config, current_level, summary)
+                        node_id = _add_node_info(design_config, current_level, truncate_string(summary, 30))
                         _add_event_to_node_edge(design_config, current_level, event, node_id, "next speaker")
 
                     # Track last summarize event so we can connect it to the outside
@@ -295,4 +318,40 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
     process_level(True, dot, "0", all_ordered, 0, "0", None)
 
     # Render the diagram
-    dot.render(directory=directory, filename=filename, format=format)
+    file_path = dot.render(directory=directory, filename=filename, format=format)
+
+    if format=="svg":
+        # post-visualisation, add background definition
+
+        # new_content = '<pattern height="12" id="bg_pattern" patternUnits="userSpaceOnUse" width="15"><circle cx="5" cy="5" fill="' + design_config["canvas_pattern_color"] + '" r="3" /></pattern>'
+        background_pattern = '<defs><pattern height="40" width="40" id="bg_pattern" patternUnits="userSpaceOnUse" width="100"><circle cx="15" cy="15" r="14" stroke="' + design_config["canvas_pattern_color"] + '" stroke-width="1" fill="none" /><text x="7" y="19" font-family="Arial" font-size="12" fill="' + design_config["canvas_pattern_color"] + '">AG</text></pattern></defs>'
+        post_svg(design_config, directory, filename + ".svg", background_pattern)
+
+def post_svg(design_config: Dict, directory: str, filename: str, background_pattern: str):
+    """Post-processing the SVG, adding the background pattern"""
+
+    # Read the original SVG content
+    with open(f"{directory}/{filename}", 'r') as file:
+        svg_content = file.read()
+    
+    # Check if <defs> tag exists, if not, insert it before the closing </svg> tag
+    if '<defs>' not in svg_content:
+        insert_position = svg_content.find('</svg>')
+        if insert_position == -1:
+            raise ValueError("Invalid SVG file: no closing </svg> tag found.")
+        
+        # Add <defs> section and new content
+        defs_section = f'<defs>{background_pattern}</defs>\n'
+        updated_svg = svg_content[:insert_position] + defs_section + svg_content[insert_position:]
+    else:
+        # If <defs> exists, insert the content inside it
+        insert_position = svg_content.find('</defs>') + len('</defs>')
+        updated_svg = svg_content[:insert_position] + background_pattern + svg_content[insert_position:]
+
+    # Update the background fill
+    updated_svg = updated_svg.replace(design_config["canvas_bg"], "url(#bg_pattern)")
+    
+    # Write the updated SVG content to a new file or overwrite the original
+    output_file = directory + "/" + filename
+    with open(output_file, 'w') as file:
+        file.write(updated_svg)
