@@ -269,7 +269,7 @@ def _create_tooltip(message):
     if isinstance(message, str):
         return message
     elif isinstance(message, dict):
-        tooltip_text = message['content']
+        tooltip_text = message['content'] if message['content'] else ""
         if "tool_calls" in message and message["tool_calls"] is not None:
             for tool_call in message["tool_calls"]:
                 tooltip_text += f"\nTool call: {json.dumps(tool_call['function'])}"
