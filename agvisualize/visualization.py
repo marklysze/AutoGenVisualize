@@ -1,7 +1,7 @@
 from typing import Dict, List
 from uuid import uuid4
 from graphviz import Digraph
-import xml.etree.ElementTree as ET
+import re
 from agvisualize.visualization_tools import *
 from agvisualize.log_data import LogAgent, LogEvent, LogClient, LogInvocation, LogSession
 from agvisualize.log_processing import load_log_file
@@ -18,16 +18,16 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
         "start_bg": "#222222",
         "start_font_color": "#FFFFFF",
         "start_border_color": "#6666FF",
-        "fill_color": "#EEEEEE",
-        "border_color": "#AAAAAA",
+        "fill_color": "#DDFFF7",
+        "border_color": "#00BE92",
         "font_color": "#FAFAFA",
         "node_font_color": "#222222",
-        "edge_color": "#AAAAFF",
+        "edge_color": "#6666FF",
         "edge_success_color": "#00FF00",
         "edge_unsuccessful_color": "#FF0000",
         "edge_style": "solid",
         "edge_style_silent": "dashed",
-        "font_names": "Helvetica, DejaVu Sans, Arial, sans-serif",
+        "font_names": "Helvetica, DejaVu Sans, Arial, Courier, sans-serif",
         "label_distance": "5.0",
         "node_pen_width": "3.0",
         "node_shape": {
@@ -37,6 +37,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
             "invocation": "invhouse",
             "info": "note",
             "code_execution": "cds",
+            "human": "Mdiamond"
         },
     }
 
@@ -183,13 +184,46 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
                         # Specific function handling
                         if reply_func_name == "check_termination_and_human_reply":
 
-                            # Add summary node
-                            _add_node_terminate(design_config, current_level, event)
+                            if event.json_state['reply'] is None:
+                                # No human reply or human chose to exit, so this is a termination.
 
-                            # Link it to the agent
-                            _add_agent_to_event_edge(design_config, current_level, current_agent, event, reply_func_name)
+                                # Add summary node
+                                _add_node_terminate(design_config, current_level, event)
 
-                            last_termination = event
+                                # Link it to the agent
+                                _add_agent_to_event_edge(design_config, current_level, current_agent, event, reply_func_name)
+
+                                last_termination = event
+                            else:
+                                # We have a human reply
+
+                                # Add human node
+                                _add_node_human(design_config, current_level, event)
+
+                                # Link it to the agent
+                                source_agent = agents[_agent_id_by_name(agents, event.source_name)]
+                                _add_event_to_agent_return_edge(design_config, current_level, source_agent, event, reply_func_name, event.json_state['reply']['content'])
+
+                                '''
+                                # Add a human node (which we'll denote as a human)
+                                if not _have_human_agent(agents):
+                                    human_agent = _add_human_agent(agents)
+
+                                    if not "index" in human_agent.visualization_params:
+                                        human_agent.visualization_params["index"] = 0
+
+                                    # Assign a colour to the agent
+                                    if not human_agent.id in agent_colors:
+                                        _assign_agent_color(agent_colors, human_agent.id)
+                                        human_agent.visualization_params["color"] = agent_colors[human_agent.id]
+                                else:
+                                    human_agent = _get_human_agent(agents)
+
+                                # Link to the human node
+                                _add_agent_to_agent_edge(design_config, agents, current_level, current_agent, human_agent, reply_func_name, event.json_state['reply']['content'])
+
+                                current_agent = human_agent
+                                '''
 
                         elif reply_func_name == "_summary_from_nested_chats":
 
@@ -226,11 +260,24 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
                             # Once added, we clear the available invocations
                             available_invocations.clear()
 
+                elif event.event_name.startswith("_prepare_and_select_agents:callable:"):
+                    # Group Chat callable speaker selection
+
+                    callable_name = event.event_name.split(":")[2]
+
+                    source_agent = agents[_agent_id_by_name(agents, event.source_name)]
+
+                    # Add function call node
+                    _add_node_event_reply_func_executed(design_config, dot, event, callable_name, design_config["node_shape"]["code_execution"])
+
+                    # Create the edge loop
+                    _add_event_to_agent_return_edge(design_config, current_level, source_agent, event, event.json_state['next_agent'])
+
                 elif event.event_name == "generate_tool_calls_reply":
                     # Tool calls will be like invocations - it will call the tool and loop back
 
                     # Add function call node
-                    _add_node_event_reply_func_executed(design_config, dot, event, event.json_state["function_name"], "cds")
+                    _add_node_event_reply_func_executed(design_config, dot, event, event.json_state["function_name"], design_config["node_shape"]["code_execution"])
 
                     # Create the edge loop
                     _add_event_to_agent_return_edge(design_config, current_level, current_agent, event, event.event_name, event.json_state['return_value'])
@@ -328,6 +375,28 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
         background_pattern = '<pattern height="40" width="40" id="bg_pattern" patternUnits="userSpaceOnUse"><rect x="0" y="0" width="40" height="40" fill="' + design_config["canvas_pattern_bg"] + '" /><circle cx="15" cy="15" r="14" stroke="' + design_config["canvas_pattern_color"] + '" stroke-width="1" fill="none" /><text x="7" y="19" font-family="Arial" font-size="12" fill="' + design_config["canvas_pattern_color"] + '">AG</text></pattern>'
         post_svg(design_config, directory, filename + ".svg", background_pattern)
 
+def highlight_anchors(svg_string):
+    """Bolds text within anchors and changes cursor to pointer - to indicate hover over"""
+    def modify_anchor_and_text(match):
+        a_tag = match.group(1)
+        text_tag = match.group(2)
+        closing_a = match.group(3)
+
+        # Add cursor: pointer to the anchor tag if it's not already there
+        if 'style' not in a_tag:
+            a_tag = a_tag.replace('>', ' style="cursor: pointer;">', 1)
+        elif 'cursor: pointer' not in a_tag:
+            a_tag = a_tag.replace('style="', 'style="cursor: pointer; ', 1)
+
+        # Add font-weight: bold to the text tag if it's not already there
+        if 'font-weight' not in text_tag:
+            text_tag = text_tag.replace('<text', '<text font-weight="bold"', 1)
+
+        return a_tag + text_tag + closing_a
+    
+    pattern = r'(<a[^>]*>)([\s\S]*?<text[\s\S]*?</text>)([\s\S]*?</a>)'
+    return re.sub(pattern, modify_anchor_and_text, svg_string)
+
 def post_svg(design_config: Dict, directory: str, filename: str, background_pattern: str):
     """Post-processing the SVG, adding the background pattern"""
 
@@ -351,6 +420,9 @@ def post_svg(design_config: Dict, directory: str, filename: str, background_patt
 
     # Update the background fill
     updated_svg = updated_svg.replace(design_config["canvas_replace_bg"], "url(#bg_pattern)")
+
+    # Bold text with anchors
+    updated_svg = highlight_anchors(updated_svg)
     
     # Write the updated SVG content to a new file or overwrite the original
     output_file = directory + "/" + filename
