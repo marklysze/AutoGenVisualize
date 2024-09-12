@@ -1,5 +1,3 @@
-# log_data.py
-
 from datetime import datetime
 import json
 from typing import Any, Dict
