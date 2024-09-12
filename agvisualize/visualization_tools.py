@@ -1,9 +1,11 @@
-# Functions to support visualisation
+# Functions to support visualisation around GraphViz and messages
 
 import re
 from typing import Dict, List
 from uuid import uuid4
 import json
+import time
+from datetime import datetime, timezone
 from graphviz import Digraph
 from agvisualize.log_data import LogAgent, LogEvent, LogClient, LogInvocation 
 
@@ -21,6 +23,7 @@ __all__ = [
     '_add_node_summary',
     '_add_node_terminate',
     '_add_node_code_execution',
+    '_add_node_human',
     '_add_node_event_reply_func_executed',
     '_add_node_invocation',
     '_add_node_info',
@@ -148,38 +151,43 @@ def _add_node_agent(design_config: Dict, agents: Dict[int, LogAgent], dot: Digra
 def _add_node_summary(design_config: Dict, dot: Digraph, event: LogEvent):
     """Add a summary node to the diagram"""
     
-    dot.node(event.event_id, "Summarize", shape=design_config["node_shape"]["summary"], color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"])
+    dot.node(event.event_id, "Summarize", shape=design_config["node_shape"]["summary"], color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"], penwidth=design_config["node_pen_width"])
 
 def _add_node_terminate(design_config: Dict, dot: Digraph, event: LogEvent):
     """Add a termination node to the diagram"""
 
-    dot.node(event.event_id, "Termination", shape=design_config["node_shape"]["terminate"], color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"])
+    dot.node(event.event_id, "Termination", shape=design_config["node_shape"]["terminate"], color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"], penwidth=design_config["node_pen_width"])
 
 def _add_node_code_execution(design_config: Dict, dot: Digraph, event: LogEvent, exitcode: int, tooltip_text: str = "", href_text: str = ""):
     """Add a code execution node to the diagram"""
 
     edge_color = design_config["edge_success_color"] if exitcode == 0 else design_config["edge_unsuccessful_color"]
 
-    dot.node(event.event_id, "Code Execution", shape=design_config["node_shape"]["code_execution"], tooltip=tooltip_text, href_text=href_text, color=edge_color, style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"])
+    dot.node(event.event_id, "Code Execution", shape=design_config["node_shape"]["code_execution"], tooltip=tooltip_text, href_text=href_text, color=edge_color, style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"], penwidth=design_config["node_pen_width"])
+
+def _add_node_human(design_config: Dict, dot: Digraph, event: LogEvent):
+    """Add a human input node to the diagram"""
+
+    dot.node(event.event_id, "Human Reply", shape=design_config["node_shape"]["human"], color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"], penwidth=design_config["node_pen_width"])
 
 def _add_node_event_reply_func_executed(design_config: Dict, dot: Digraph, event: LogEvent, event_name: str, shape_name: str):
     """Add an event node to the diagram"""
 
-    dot.node(event.event_id, event_name, shape=shape_name, color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"])
+    dot.node(event.event_id, event_name, shape=shape_name, color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"], penwidth=design_config["node_pen_width"])
 
 def _add_node_invocation(design_config: Dict, clients: Dict[int, LogClient], wrapper_clients: Dict[int, List], dot: Digraph, invocation: LogInvocation):
     """Add an invocation node to the diagram"""
 
     client_name = _client_by_id(clients, wrapper_clients, invocation.client_id, invocation.wrapper_id).class_name
 
-    dot.node(invocation.invocation_id, client_name, shape=design_config["node_shape"]["invocation"], color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"])
+    dot.node(invocation.invocation_id, client_name, shape=design_config["node_shape"]["invocation"], color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"], penwidth=design_config["node_pen_width"])
 
 def _add_node_info(design_config: Dict, dot: Digraph, event_name: str) -> str:
     """Add an info node to the diagram an returns the name of the node"""
 
     new_id = str(uuid4())
 
-    dot.node(new_id, event_name, shape=design_config["node_shape"]["info"], color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"])
+    dot.node(new_id, event_name, shape=design_config["node_shape"]["info"], color=design_config["border_color"], style='filled', fillcolor=design_config["fill_color"], fontcolor=design_config["node_font_color"], fontname=design_config["font_names"], penwidth=design_config["node_pen_width"])
 
     return new_id
 
@@ -191,7 +199,7 @@ def _add_agent_to_agent_edge(design_config: Dict, agents: Dict[int, LogAgent], d
         _add_node_agent(design_config, agents, dot, sender_agent)
 
     if recipient_agent.visualization_params['index'] == 0:
-        _add_node_agent(dot, recipient_agent)
+        _add_node_agent(design_config, agents, dot, recipient_agent)
 
     dot.edge(_get_agent_node_id(sender_agent), _get_agent_node_id(recipient_agent), label=edge_text, labeltooltip=tooltip_text, labelhref=href_text, dir=dir, labeldistance=design_config["label_distance"], fontcolor=design_config["font_color"], color=design_config["edge_color"], fontname=design_config["font_names"], style=style)
 
