@@ -40,8 +40,8 @@ __all__ = [
     '_add_invocation_to_event_edge',
     '_add_agent_info_loop_edge',
     '_create_tooltip',
-    'truncate_string',
-    'extract_invocation_response'
+    '_truncate_string',
+    '_extract_invocation_response'
 ]
 
 def _assign_agent_color(agent_colors, agent_id) -> str:
@@ -277,14 +277,14 @@ def _create_tooltip(message):
     else:
         return "Unable to create tooltip"
 
-def truncate_string(string, max_length):
+def _truncate_string(string, max_length):
     """Keeps string lengths to a max length"""
     if len(string) <= max_length:
         return string
     else:
         return string[:max_length-3] + "..."
     
-def extract_invocation_response(invocation: LogInvocation) -> str:
+def _extract_invocation_response(invocation: LogInvocation) -> str:
     """Extract an invocation's response and return as a string"""
 
     if "ChatCompletionMessage" in invocation.response:
