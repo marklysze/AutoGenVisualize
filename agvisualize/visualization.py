@@ -255,7 +255,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
                                 # Add them to the source agent
                                 source_agent = agents[_agent_id_by_name(agents, event.source_name)]
 
-                                _add_invocation_to_agent_return_edge(design_config, current_level, source_agent, invocation, reply_func_name, extract_invocation_response(invocation))
+                                _add_invocation_to_agent_return_edge(design_config, current_level, source_agent, invocation, reply_func_name, _extract_invocation_response(invocation))
 
                             # Once added, we clear the available invocations
                             available_invocations.clear()
@@ -304,7 +304,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
 
                     # If we're at the final stage of a group chat auto select speaker, show the name of the agent selected
                     if current_level.name is not None and current_nested_chat_id in nested_chats and nested_chats[current_nested_chat_id]["type"] == "Group Chat":
-                        node_id = _add_node_info(design_config, current_level, truncate_string(summary, 30))
+                        node_id = _add_node_info(design_config, current_level, _truncate_string(summary, 30))
                         _add_event_to_node_edge(design_config, current_level, event, node_id, "next speaker")
 
                     # Track last summarize event so we can connect it to the outside
