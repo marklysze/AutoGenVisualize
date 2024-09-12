@@ -99,7 +99,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
             elif isinstance(item, LogEvent):
                 event: LogEvent = item
 
-                if event.event_name in ["_summary_from_nested_chat start", "_auto_select_speaker start"]:
+                if event.event_name in ["_summary_from_nested_chat start", "_auto_select_speaker start", "a_auto_select_speaker start"]:
                     nested_chat_id = event.json_state['nested_chat_id' if event.event_name == "_summary_from_nested_chat start" else 'auto_select_speaker_id']
                     next_level_id = str(uuid4())
                     nested_chat_node_name = f'cluster_{next_level_id}'
@@ -123,7 +123,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
                     current_level.subgraph(new_nested)
                     continue
 
-                elif event.event_name in ["_summary_from_nested_chat end", "_auto_select_speaker end"]:
+                elif event.event_name in ["_summary_from_nested_chat end", "_auto_select_speaker end", "a_auto_select_speaker end"]:
 
                     # End the nested chat
                     return i+1, current_agent
@@ -260,7 +260,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
                             # Once added, we clear the available invocations
                             available_invocations.clear()
 
-                elif event.event_name.startswith("_prepare_and_select_agents:callable:"):
+                elif event.event_name and event.event_name.startswith("_prepare_and_select_agents:callable:"):
                     # Group Chat callable speaker selection
 
                     callable_name = event.event_name.split(":")[2]
@@ -273,7 +273,7 @@ def visualize_execution(diagram_name: str, log_file_path: str, directory: str, f
                     # Create the edge loop
                     _add_event_to_agent_return_edge(design_config, current_level, source_agent, event, event.json_state['next_agent'])
 
-                elif event.event_name == "generate_tool_calls_reply":
+                elif event.event_name == "generate_tool_calls_reply" or event.event_name == "a_generate_tool_calls_reply":
                     # Tool calls will be like invocations - it will call the tool and loop back
 
                     # Add function call node
