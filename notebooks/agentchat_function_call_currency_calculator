@@ -1,0 +1,36 @@
+digraph {
+	bgcolor="#123456"
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	"140415494270992_1" [label="user_proxy (1)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	start -> "140415494270992_1" [color="#6666FF"]
+	"140415462905104_1" [label="chatbot (1)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140415494270992_1" -> "140415462905104_1" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="How much is 123.45 USD in EUR?" style=solid]
+	"0e895ff0-4872-4b75-be00-bbf1f42f2864" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"140415462905104_1" -> "0e895ff0-4872-4b75-be00-bbf1f42f2864" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="ChatCompletion(id='chatcmpl-A8L4zRIgLXH1q7TXLAKjb5NwINf58', choices=[Choice(finish_reason='tool_calls', index=0, logprobs=None, message=ChatCompletionMessage(content=None, refusal=None, role='assistant', function_call=None, tool_calls=[ChatCompletionMessageToolCall(id='call_RrSa4cHdFHpzu3QHbjJGItMM', function=Function(arguments='{\"base_amount\":123.45,\"base_currency\":\"USD\",\"quote_currency\":\"EUR\"}', name='currency_calculator'), type='function')]))], created=1726551017, model='gpt-4o-mini-2024-07-18', object='chat.completion', service_tier=None, system_fingerprint='fp_483d39d857', usage=CompletionUsage(completion_tokens=28, prompt_tokens=126, total_tokens=154, completion_tokens_details={'reasoning_tokens': 0}), cost=3.5699999999999994e-05)"]
+	"0e895ff0-4872-4b75-be00-bbf1f42f2864" -> "140415462905104_1" [color="#6666FF"]
+	"140415494270992_2" [label="user_proxy (2)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140415462905104_1" -> "140415494270992_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="
+Tool call: {\"arguments\": \"{\"base_amount\":123.45,\"base_currency\":\"USD\",\"quote_currency\":\"EUR\"}\", \"name\": \"currency_calculator\"}" style=solid]
+	1726551018.190331 [label=currency_calculator color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=cds style=filled]
+	"140415494270992_2" -> 1726551018.190331 [label=generate_tool_calls_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="112.22727272727272 EUR"]
+	1726551018.190331 -> "140415494270992_2" [color="#6666FF"]
+	"140415462905104_2" [label="chatbot (2)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140415494270992_2" -> "140415462905104_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="112.22727272727272 EUR" style=solid]
+	"a020a4d3-f859-4159-a5cf-f35f2137bc2a" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"140415462905104_2" -> "a020a4d3-f859-4159-a5cf-f35f2137bc2a" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="123.45 USD is approximately 112.23 EUR. 
+
+TERMINATE"]
+	"a020a4d3-f859-4159-a5cf-f35f2137bc2a" -> "140415462905104_2" [color="#6666FF"]
+	"140415494270992_3" [label="user_proxy (3)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140415462905104_2" -> "140415494270992_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="123.45 USD is approximately 112.23 EUR. 
+
+TERMINATE" style=solid]
+	1726551018.911901 [label=Termination color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=octagon style=filled]
+	"140415494270992_3" -> 1726551018.911901 [label=check_termination_and_human_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=""]
+	"5fd23dc4-9e88-4799-8f70-844e320b1e82" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	1726551020.027978 [label=Summarize color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=parallelogram style=filled]
+	1726551018.911901 -> 1726551020.027978 [label=_reflection_with_llm_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="123.45 USD is approximately 112.23 EUR."]
+	1726551020.027978 -> "5fd23dc4-9e88-4799-8f70-844e320b1e82" [label=_reflection_with_llm_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="123.45 USD is approximately 112.23 EUR."]
+	"5fd23dc4-9e88-4799-8f70-844e320b1e82" -> 1726551020.027978 [color="#6666FF"]
+}
