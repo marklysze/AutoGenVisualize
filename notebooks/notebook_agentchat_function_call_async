@@ -1,0 +1,33 @@
+digraph {
+	bgcolor="#123456"
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	"139903449172624_1" [label="user_proxy (1)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	start -> "139903449172624_1" [color="#6666FF"]
+	"139903448989456_1" [label="chatbot (1)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139903449172624_1" -> "139903448989456_1" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Create a timer for 5 seconds and then a stopwatch for 5 seconds." style=solid]
+	"38e60e6b-af8d-488b-b8ab-844015bd8d3b" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"139903449172624_2" [label="user_proxy (2)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139903448989456_1" -> "139903449172624_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="
+Tool call: {\"arguments\": \"{\"num_seconds\": \"5\"}\", \"name\": \"timer\"}
+Tool call: {\"arguments\": \"{\"num_seconds\": \"5\"}\", \"name\": \"stopwatch\"}" style=solid]
+	1727062990.752404 [label=timer color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=cds style=filled]
+	"139903449172624_2" -> 1727062990.752404 [label=a_generate_tool_calls_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Timer is done!"]
+	1727062990.752404 -> "139903449172624_2" [color="#6666FF"]
+	1727062990.752805 [label=stopwatch color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=cds style=filled]
+	"139903449172624_2" -> 1727062990.752805 [label=a_generate_tool_calls_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Stopwatch is done!"]
+	1727062990.752805 -> "139903449172624_2" [color="#6666FF"]
+	"139903448989456_2" [label="chatbot (2)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139903449172624_2" -> "139903448989456_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Timer is done!
+
+Stopwatch is done!" style=solid]
+	"d1a341fc-5af8-4d95-af02-1f99281a1ecd" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"139903449172624_3" [label="user_proxy (3)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139903448989456_2" -> "139903449172624_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Both the timer and the stopwatch for 5 seconds are done! TERMINATE" style=solid]
+	1727062990.762315 [label=Summarize color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=parallelogram style=filled]
+	"139903449172624_3" -> 1727062990.762315 [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Both the timer and the stopwatch for 5 seconds are done! "]
+	1727062990.762315 -> "38e60e6b-af8d-488b-b8ab-844015bd8d3b" [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Both the timer and the stopwatch for 5 seconds are done! "]
+	"38e60e6b-af8d-488b-b8ab-844015bd8d3b" -> 1727062990.762315 [color="#6666FF"]
+	1727062990.762315 -> "d1a341fc-5af8-4d95-af02-1f99281a1ecd" [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Both the timer and the stopwatch for 5 seconds are done! "]
+	"d1a341fc-5af8-4d95-af02-1f99281a1ecd" -> 1727062990.762315 [color="#6666FF"]
+}

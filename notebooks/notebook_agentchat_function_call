@@ -1,0 +1,75 @@
+digraph {
+	bgcolor="#123456"
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	"140190985499472_1" [label="user_proxy (1)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	start -> "140190985499472_1" [color="#6666FF"]
+	"140190987466896_1" [label="chatbot (1)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140190985499472_1" -> "140190987466896_1" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Draw two agents chatting with each other with an example dialog. Don't add plt.show(), do it in text." style=solid]
+	"065cf8b2-3dff-45b7-ac73-88bb12c03272" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"140190987466896_1" -> "065cf8b2-3dff-45b7-ac73-88bb12c03272" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Here's a depiction of two agents chatting with each other, along with an example dialog:
+
+```
+Agent A: Hey there! How's your day going?
+
+Agent B: Hi! I'm doing well, thanks! Just working on some interesting projects. How about you?
+
+Agent A: I'm good too! I just finished a piece of code that calculates the Fibonacci sequence. 
+
+Agent B: That sounds great! Fibonacci is such a fascinating topic. Are you using it for something specific?
+
+Agent A: Yes, actually! I'm using it to help with some algorithms I'm exploring for a game I’m developing.
+
+Agent B: That’s awesome! I'd love to see how that turns out. Do you need any help with it?
+
+Agent A: I might take you up on that! Sometimes I get stuck on optimization issues. 
+
+Agent B: Just let me know! I'm always here to help out a fellow agent. 
+
+Agent A: Thanks! I appreciate it. Let's catch up later!
+```
+
+In this dialog, Agent A and Agent B are chatting about their projects, offering help, and sharing their interests."]
+	"065cf8b2-3dff-45b7-ac73-88bb12c03272" -> "140190987466896_1" [color="#6666FF"]
+	"140190985499472_2" [label="user_proxy (2)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140190987466896_1" -> "140190985499472_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Here's a depiction of two agents chatting with each other, along with an example dialog:
+
+```
+Agent A: Hey there! How's your day going?
+
+Agent B: Hi! I'm doing well, thanks! Just working on some interesting projects. How about you?
+
+Agent A: I'm good too! I just finished a piece of code that calculates the Fibonacci sequence. 
+
+Agent B: That sounds great! Fibonacci is such a fascinating topic. Are you using it for something specific?
+
+Agent A: Yes, actually! I'm using it to help with some algorithms I'm exploring for a game I’m developing.
+
+Agent B: That’s awesome! I'd love to see how that turns out. Do you need any help with it?
+
+Agent A: I might take you up on that! Sometimes I get stuck on optimization issues. 
+
+Agent B: Just let me know! I'm always here to help out a fellow agent. 
+
+Agent A: Thanks! I appreciate it. Let's catch up later!
+```
+
+In this dialog, Agent A and Agent B are chatting about their projects, offering help, and sharing their interests." style=solid]
+	1727063094.905841 [label="Code Execution" color="#FF0000" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" href_text="" penwidth=3.0 shape=cds style=filled tooltip="exitcode: 1 (execution failed)
+Code output: 
+unknown language unknown"]
+	1727063094.905841 -> "140190985499472_2" [label=Unsuccessful color="#FF0000" dir=both fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0]
+	"140190987466896_2" [label="chatbot (2)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140190985499472_2" -> "140190987466896_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="exitcode: 1 (execution failed)
+Code output: 
+unknown language unknown" style=solid]
+	"6dd1ee52-e5a2-434c-a2e9-bbfdde604729" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"140190987466896_2" -> "6dd1ee52-e5a2-434c-a2e9-bbfdde604729" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=TERMINATE]
+	"6dd1ee52-e5a2-434c-a2e9-bbfdde604729" -> "140190987466896_2" [color="#6666FF"]
+	"140190985499472_3" [label="user_proxy (3)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140190987466896_2" -> "140190985499472_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=TERMINATE style=solid]
+	1727063094.909018 [label=Termination color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=octagon style=filled]
+	"140190985499472_3" -> 1727063094.909018 [label=check_termination_and_human_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=""]
+	1727063094.909257 [label=Summarize color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=parallelogram style=filled]
+	1727063094.909018 -> 1727063094.909257 [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=""]
+}

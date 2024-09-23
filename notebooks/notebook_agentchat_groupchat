@@ -1,0 +1,1502 @@
+digraph {
+	bgcolor="#123456"
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	"140545503660304_1" [label="User_proxy (1)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	start -> "140545503660304_1" [color="#6666FF"]
+	"140545503633808_1" [label="chat_manager (1)" color="#C8A8A2" fillcolor="#FBDBD5" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545503660304_1" -> "140545503633808_1" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Find a latest paper about gpt-4 on arxiv and find its potential applications in software." style=solid]
+	"140545493979024_1" [label="Coder (1)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545503633808_1" -> "140545493979024_1" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Find a latest paper about gpt-4 on arxiv and find its potential applications in software." style=dashed]
+	"140545494022480_1" [label="Product_manager (1)" color="#BA847A" fillcolor="#EDB7AD" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545503633808_1" -> "140545494022480_1" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Find a latest paper about gpt-4 on arxiv and find its potential applications in software." style=dashed]
+	"dea1ca2b-139c-4d1b-ac57-5d1130ea8621" [label=Ollama color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	subgraph "cluster_2741e026-d116-4827-8f27-81e462fa2ebb" {
+		color="#003535" fillcolor="#004F4F" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" label="Group Chat Auto Select Speaker" labeljust=r labelloc=b margin=35 penwidth=5 style="rounded, filled"
+		"140545531529552_1" [label="checking_agent (1)" color="#B1BBB6" fillcolor="#E4EEE9" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+		"140545503633808_1" -> "140545531529552_1" [label="Auto Select Speaker" color="#6666FF" dir=both fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="" style=dashed]
+		"140545493984976_1" [label="speaker_selection_agent (1)" color="#9AA293" fillcolor="#CDD5C6" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+		"140545531529552_1" -> "140545493984976_1" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Read the above conversation. Then select the next role from ['User_proxy', 'Coder', 'Product_manager'] to play. Only return the role." style=dashed]
+		"140545493984976_1" -> "dea1ca2b-139c-4d1b-ac57-5d1130ea8621" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=Coder]
+		"dea1ca2b-139c-4d1b-ac57-5d1130ea8621" -> "140545493984976_1" [color="#6666FF"]
+		"140545531529552_2" [label="checking_agent (2)" color="#B1BBB6" fillcolor="#E4EEE9" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+		"140545493984976_1" -> "140545531529552_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=Coder style=dashed]
+		1727063447.798501 [label=Summarize color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=parallelogram style=filled]
+		"140545531529552_2" -> 1727063447.798501 [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=Coder]
+		"f119a85c-e182-4eab-8318-d8ebaec9e767" [label=Coder color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=note style=filled]
+		1727063447.798501 -> "f119a85c-e182-4eab-8318-d8ebaec9e767" [label="next speaker" color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=""]
+	}
+	"735f791d-097a-4ba3-877e-15086680a8bc" [label=Ollama color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"140545493979024_1" -> "735f791d-097a-4ba3-877e-15086680a8bc" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="To find the latest paper about GPT-4 on ArXiv and identify its potential applications in software, we can follow these steps:
+
+1. **Search for the latest GPT-4 papers on ArXiv**:
+   - We'll use Python to search the ArXiv API for recent papers related to GPT-4.
+2. **Parse the paper details**:
+   - Extract the title and abstract of each paper.
+3. **Analyze the potential applications in software**:
+   - Based on the titles and abstracts, identify key areas where GPT-4 could be applied.
+
+Let's go through these steps one by one.
+
+### Step 1: Search for the latest GPT-4 papers on ArXiv
+
+We'll use Python to interact with the ArXiv API. First, you need to install the `arxiv` library if you haven't already:
+
+```bash
+pip install arxiv
+```
+
+Now, let's write the Python script to search for the latest GPT-4 papers:
+
+```python
+# filename: get_gpt4_papers.py
+
+import arxiv
+from datetime import datetime, timedelta
+
+def search_latest_papers(query):
+    today = datetime.now()
+    one_week_ago = today - timedelta(days=7)
+    
+    search = arxiv.Search(
+        query=query,
+        id_list=[],
+        sort_by=arxiv.SortCriterion.SubmittedDate,
+        max_results=10
+    )
+    
+    results = list(search.results())
+    return results
+
+def print_papers(papers):
+    for paper in papers:
+        print(f\"Title: {paper.title}\")
+        print(f\"URL: {paper.entry_id}\")
+        print(f\"Summary: {paper.summary}\
+\")
+
+if __name__ == \"__main__\":
+    query = \"GPT-4\"
+    latest_papers = search_latest_papers(query)
+    print_papers(latest_papers)
+```
+
+### Step 2: Parse the paper details
+
+The script above will fetch and display the title, URL, and summary of the latest papers related to GPT-4. We need to analyze these summaries to identify potential applications in software.
+
+### Step 3: Analyze the potential applications in software
+
+Based on the titles and abstracts, we can manually identify key areas where GPT-4 could be applied. Here are some possible applications:
+
+1. **Natural Language Processing (NLP)**:
+   - Text generation
+   - Chatbots and virtual assistants
+   - Content summarization
+   - Sentiment analysis
+
+2. **Machine Translation**:
+   - Real-time translation services
+   - Automated document translation
+
+3. **Code Generation and Assistance**:
+   - Intelligent code completion
+   - Automated bug detection and correction
+   - Code documentation generation
+
+4. **Virtual Customer Support**:
+   - 24/7 customer support using chatbots
+   - Predictive analytics to anticipate user needs
+
+5. **Content Creation**:
+   - Article summarization and expansion
+   - Writing assistance for students and professionals
+
+6. **Healthcare**:
+   - Medical transcription
+   - Patient records management
+   - Healthcare information retrieval
+
+7. **Finance**:
+   - Fraud detection and prevention
+   - Market analysis
+   - Portfolio optimization
+
+By analyzing the summaries of the latest GPT-4 papers, we can identify these potential applications in software.
+
+### Conclusion
+
+The script provided will fetch the latest GPT-4 papers from ArXiv and display their titles, URLs, and summaries. You need to manually analyze these summaries to identify key areas where GPT-4 could be applied in software.
+
+If you want to automate this process further or perform more detailed analysis, you can extend the script to include natural language processing techniques to extract specific keywords and phrases from the abstracts.
+
+TERMINATE"]
+	"735f791d-097a-4ba3-877e-15086680a8bc" -> "140545493979024_1" [color="#6666FF"]
+	"140545503633808_2" [label="chat_manager (2)" color="#C8A8A2" fillcolor="#FBDBD5" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545493979024_1" -> "140545503633808_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="To find the latest paper about GPT-4 on ArXiv and identify its potential applications in software, we can follow these steps:
+
+1. **Search for the latest GPT-4 papers on ArXiv**:
+   - We'll use Python to search the ArXiv API for recent papers related to GPT-4.
+2. **Parse the paper details**:
+   - Extract the title and abstract of each paper.
+3. **Analyze the potential applications in software**:
+   - Based on the titles and abstracts, identify key areas where GPT-4 could be applied.
+
+Let's go through these steps one by one.
+
+### Step 1: Search for the latest GPT-4 papers on ArXiv
+
+We'll use Python to interact with the ArXiv API. First, you need to install the `arxiv` library if you haven't already:
+
+```bash
+pip install arxiv
+```
+
+Now, let's write the Python script to search for the latest GPT-4 papers:
+
+```python
+# filename: get_gpt4_papers.py
+
+import arxiv
+from datetime import datetime, timedelta
+
+def search_latest_papers(query):
+    today = datetime.now()
+    one_week_ago = today - timedelta(days=7)
+    
+    search = arxiv.Search(
+        query=query,
+        id_list=[],
+        sort_by=arxiv.SortCriterion.SubmittedDate,
+        max_results=10
+    )
+    
+    results = list(search.results())
+    return results
+
+def print_papers(papers):
+    for paper in papers:
+        print(f\"Title: {paper.title}\")
+        print(f\"URL: {paper.entry_id}\")
+        print(f\"Summary: {paper.summary}\n\")
+
+if __name__ == \"__main__\":
+    query = \"GPT-4\"
+    latest_papers = search_latest_papers(query)
+    print_papers(latest_papers)
+```
+
+### Step 2: Parse the paper details
+
+The script above will fetch and display the title, URL, and summary of the latest papers related to GPT-4. We need to analyze these summaries to identify potential applications in software.
+
+### Step 3: Analyze the potential applications in software
+
+Based on the titles and abstracts, we can manually identify key areas where GPT-4 could be applied. Here are some possible applications:
+
+1. **Natural Language Processing (NLP)**:
+   - Text generation
+   - Chatbots and virtual assistants
+   - Content summarization
+   - Sentiment analysis
+
+2. **Machine Translation**:
+   - Real-time translation services
+   - Automated document translation
+
+3. **Code Generation and Assistance**:
+   - Intelligent code completion
+   - Automated bug detection and correction
+   - Code documentation generation
+
+4. **Virtual Customer Support**:
+   - 24/7 customer support using chatbots
+   - Predictive analytics to anticipate user needs
+
+5. **Content Creation**:
+   - Article summarization and expansion
+   - Writing assistance for students and professionals
+
+6. **Healthcare**:
+   - Medical transcription
+   - Patient records management
+   - Healthcare information retrieval
+
+7. **Finance**:
+   - Fraud detection and prevention
+   - Market analysis
+   - Portfolio optimization
+
+By analyzing the summaries of the latest GPT-4 papers, we can identify these potential applications in software.
+
+### Conclusion
+
+The script provided will fetch the latest GPT-4 papers from ArXiv and display their titles, URLs, and summaries. You need to manually analyze these summaries to identify key areas where GPT-4 could be applied in software.
+
+If you want to automate this process further or perform more detailed analysis, you can extend the script to include natural language processing techniques to extract specific keywords and phrases from the abstracts.
+
+TERMINATE" style=solid]
+	"140545503660304_2" [label="User_proxy (2)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545503633808_2" -> "140545503660304_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="To find the latest paper about GPT-4 on ArXiv and identify its potential applications in software, we can follow these steps:
+
+1. **Search for the latest GPT-4 papers on ArXiv**:
+   - We'll use Python to search the ArXiv API for recent papers related to GPT-4.
+2. **Parse the paper details**:
+   - Extract the title and abstract of each paper.
+3. **Analyze the potential applications in software**:
+   - Based on the titles and abstracts, identify key areas where GPT-4 could be applied.
+
+Let's go through these steps one by one.
+
+### Step 1: Search for the latest GPT-4 papers on ArXiv
+
+We'll use Python to interact with the ArXiv API. First, you need to install the `arxiv` library if you haven't already:
+
+```bash
+pip install arxiv
+```
+
+Now, let's write the Python script to search for the latest GPT-4 papers:
+
+```python
+# filename: get_gpt4_papers.py
+
+import arxiv
+from datetime import datetime, timedelta
+
+def search_latest_papers(query):
+    today = datetime.now()
+    one_week_ago = today - timedelta(days=7)
+    
+    search = arxiv.Search(
+        query=query,
+        id_list=[],
+        sort_by=arxiv.SortCriterion.SubmittedDate,
+        max_results=10
+    )
+    
+    results = list(search.results())
+    return results
+
+def print_papers(papers):
+    for paper in papers:
+        print(f\"Title: {paper.title}\")
+        print(f\"URL: {paper.entry_id}\")
+        print(f\"Summary: {paper.summary}\n\")
+
+if __name__ == \"__main__\":
+    query = \"GPT-4\"
+    latest_papers = search_latest_papers(query)
+    print_papers(latest_papers)
+```
+
+### Step 2: Parse the paper details
+
+The script above will fetch and display the title, URL, and summary of the latest papers related to GPT-4. We need to analyze these summaries to identify potential applications in software.
+
+### Step 3: Analyze the potential applications in software
+
+Based on the titles and abstracts, we can manually identify key areas where GPT-4 could be applied. Here are some possible applications:
+
+1. **Natural Language Processing (NLP)**:
+   - Text generation
+   - Chatbots and virtual assistants
+   - Content summarization
+   - Sentiment analysis
+
+2. **Machine Translation**:
+   - Real-time translation services
+   - Automated document translation
+
+3. **Code Generation and Assistance**:
+   - Intelligent code completion
+   - Automated bug detection and correction
+   - Code documentation generation
+
+4. **Virtual Customer Support**:
+   - 24/7 customer support using chatbots
+   - Predictive analytics to anticipate user needs
+
+5. **Content Creation**:
+   - Article summarization and expansion
+   - Writing assistance for students and professionals
+
+6. **Healthcare**:
+   - Medical transcription
+   - Patient records management
+   - Healthcare information retrieval
+
+7. **Finance**:
+   - Fraud detection and prevention
+   - Market analysis
+   - Portfolio optimization
+
+By analyzing the summaries of the latest GPT-4 papers, we can identify these potential applications in software.
+
+### Conclusion
+
+The script provided will fetch the latest GPT-4 papers from ArXiv and display their titles, URLs, and summaries. You need to manually analyze these summaries to identify key areas where GPT-4 could be applied in software.
+
+If you want to automate this process further or perform more detailed analysis, you can extend the script to include natural language processing techniques to extract specific keywords and phrases from the abstracts.
+
+TERMINATE" style=dashed]
+	"140545494022480_2" [label="Product_manager (2)" color="#BA847A" fillcolor="#EDB7AD" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545503633808_2" -> "140545494022480_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="To find the latest paper about GPT-4 on ArXiv and identify its potential applications in software, we can follow these steps:
+
+1. **Search for the latest GPT-4 papers on ArXiv**:
+   - We'll use Python to search the ArXiv API for recent papers related to GPT-4.
+2. **Parse the paper details**:
+   - Extract the title and abstract of each paper.
+3. **Analyze the potential applications in software**:
+   - Based on the titles and abstracts, identify key areas where GPT-4 could be applied.
+
+Let's go through these steps one by one.
+
+### Step 1: Search for the latest GPT-4 papers on ArXiv
+
+We'll use Python to interact with the ArXiv API. First, you need to install the `arxiv` library if you haven't already:
+
+```bash
+pip install arxiv
+```
+
+Now, let's write the Python script to search for the latest GPT-4 papers:
+
+```python
+# filename: get_gpt4_papers.py
+
+import arxiv
+from datetime import datetime, timedelta
+
+def search_latest_papers(query):
+    today = datetime.now()
+    one_week_ago = today - timedelta(days=7)
+    
+    search = arxiv.Search(
+        query=query,
+        id_list=[],
+        sort_by=arxiv.SortCriterion.SubmittedDate,
+        max_results=10
+    )
+    
+    results = list(search.results())
+    return results
+
+def print_papers(papers):
+    for paper in papers:
+        print(f\"Title: {paper.title}\")
+        print(f\"URL: {paper.entry_id}\")
+        print(f\"Summary: {paper.summary}\n\")
+
+if __name__ == \"__main__\":
+    query = \"GPT-4\"
+    latest_papers = search_latest_papers(query)
+    print_papers(latest_papers)
+```
+
+### Step 2: Parse the paper details
+
+The script above will fetch and display the title, URL, and summary of the latest papers related to GPT-4. We need to analyze these summaries to identify potential applications in software.
+
+### Step 3: Analyze the potential applications in software
+
+Based on the titles and abstracts, we can manually identify key areas where GPT-4 could be applied. Here are some possible applications:
+
+1. **Natural Language Processing (NLP)**:
+   - Text generation
+   - Chatbots and virtual assistants
+   - Content summarization
+   - Sentiment analysis
+
+2. **Machine Translation**:
+   - Real-time translation services
+   - Automated document translation
+
+3. **Code Generation and Assistance**:
+   - Intelligent code completion
+   - Automated bug detection and correction
+   - Code documentation generation
+
+4. **Virtual Customer Support**:
+   - 24/7 customer support using chatbots
+   - Predictive analytics to anticipate user needs
+
+5. **Content Creation**:
+   - Article summarization and expansion
+   - Writing assistance for students and professionals
+
+6. **Healthcare**:
+   - Medical transcription
+   - Patient records management
+   - Healthcare information retrieval
+
+7. **Finance**:
+   - Fraud detection and prevention
+   - Market analysis
+   - Portfolio optimization
+
+By analyzing the summaries of the latest GPT-4 papers, we can identify these potential applications in software.
+
+### Conclusion
+
+The script provided will fetch the latest GPT-4 papers from ArXiv and display their titles, URLs, and summaries. You need to manually analyze these summaries to identify key areas where GPT-4 could be applied in software.
+
+If you want to automate this process further or perform more detailed analysis, you can extend the script to include natural language processing techniques to extract specific keywords and phrases from the abstracts.
+
+TERMINATE" style=dashed]
+	"08109b3d-6469-4176-b8a0-1cc69063752b" [label=Ollama color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	subgraph "cluster_8a41c7c1-b3c2-45ad-affe-993bb8baedd3" {
+		color="#003535" fillcolor="#004F4F" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" label="Group Chat Auto Select Speaker" labeljust=r labelloc=b margin=35 penwidth=5 style="rounded, filled"
+		"140545531529552_3" [label="checking_agent (3)" color="#B1BBB6" fillcolor="#E4EEE9" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+		"140545503633808_2" -> "140545531529552_3" [label="Auto Select Speaker" color="#6666FF" dir=both fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="" style=dashed]
+		"140545493984976_2" [label="speaker_selection_agent (2)" color="#9AA293" fillcolor="#CDD5C6" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+		"140545531529552_3" -> "140545493984976_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Read the above conversation. Then select the next role from ['User_proxy', 'Coder', 'Product_manager'] to play. Only return the role." style=dashed]
+		"140545493984976_2" -> "08109b3d-6469-4176-b8a0-1cc69063752b" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=User_proxy]
+		"08109b3d-6469-4176-b8a0-1cc69063752b" -> "140545493984976_2" [color="#6666FF"]
+		"140545531529552_4" [label="checking_agent (4)" color="#B1BBB6" fillcolor="#E4EEE9" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+		"140545493984976_2" -> "140545531529552_4" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=User_proxy style=dashed]
+		1727063447.809587 [label=Summarize color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=parallelogram style=filled]
+		"140545531529552_4" -> 1727063447.809587 [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=User_proxy]
+		"c87b8e99-6afe-4bc7-a6da-793961298807" [label=User_proxy color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=note style=filled]
+		1727063447.809587 -> "c87b8e99-6afe-4bc7-a6da-793961298807" [label="next speaker" color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=""]
+	}
+	1727063453.266603 [label="Code Execution" color="#00FF00" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" href_text="" penwidth=3.0 shape=cds style=filled tooltip="exitcode: 0 (execution succeeded)
+Code output: 
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: arxiv in /home/autogen-ai/.local/lib/python3.11/site-packages (2.1.3)
+Requirement already satisfied: feedparser~=6.0.10 in /home/autogen-ai/.local/lib/python3.11/site-packages (from arxiv) (6.0.11)
+Requirement already satisfied: requests~=2.32.0 in /usr/local/lib/python3.11/site-packages (from arxiv) (2.32.3)
+Requirement already satisfied: sgmllib3k in /home/autogen-ai/.local/lib/python3.11/site-packages (from feedparser~=6.0.10->arxiv) (1.0.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (3.3.2)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (3.7)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (2.2.2)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (2024.7.4)
+
+Title: Human-like Affective Cognition in Foundation Models
+URL: http://arxiv.org/abs/2409.11733v2
+Summary: Understanding emotions is fundamental to human interaction and experience.
+Humans easily infer emotions from situations or facial expressions, situations
+from emotions, and do a variety of other affective cognition. How adept is
+modern AI at these inferences? We introduce an evaluation framework for testing
+affective cognition in foundation models. Starting from psychological theory,
+we generate 1,280 diverse scenarios exploring relationships between appraisals,
+emotions, expressions, and outcomes. We evaluate the abilities of foundation
+models (GPT-4, Claude-3, Gemini-1.5-Pro) and humans (N = 567) across carefully
+selected conditions. Our results show foundation models tend to agree with
+human intuitions, matching or exceeding interparticipant agreement. In some
+conditions, models are ``superhuman'' -- they better predict modal human
+judgements than the average human. All models benefit from chain-of-thought
+reasoning. This suggests foundation models have acquired a human-like
+understanding of emotions and their influence on beliefs and behavior.
+
+Title: From Lists to Emojis: How Format Bias Affects Model Alignment
+URL: http://arxiv.org/abs/2409.11704v1
+Summary: In this paper, we study format biases in reinforcement learning from human
+feedback (RLHF). We observe that many widely-used preference models, including
+human evaluators, GPT-4, and top-ranking models on the RewardBench benchmark,
+exhibit strong biases towards specific format patterns, such as lists, links,
+bold text, and emojis. Furthermore, large language models (LLMs) can exploit
+these biases to achieve higher rankings on popular benchmarks like AlpacaEval
+and LMSYS Chatbot Arena. One notable example of this is verbosity bias, where
+current preference models favor longer responses that appear more
+comprehensive, even when their quality is equal to or lower than shorter,
+competing responses. However, format biases beyond verbosity remain largely
+underexplored in the literature. In this work, we extend the study of biases in
+preference learning beyond the commonly recognized length bias, offering a
+comprehensive analysis of a wider range of format biases. Additionally, we show
+that with a small amount of biased data (less than 1%), we can inject
+significant bias into the reward model. Moreover, these format biases can also
+be easily exploited by downstream alignment algorithms, such as best-of-n
+sampling and online iterative DPO, as it is usually easier to manipulate the
+format than to improve the quality of responses. Our findings emphasize the
+need to disentangle format and content both for designing alignment algorithms
+and evaluating models.
+
+Title: Harnessing LLMs for API Interactions: A Framework for Classification and Synthetic Data Generation
+URL: http://arxiv.org/abs/2409.11703v1
+Summary: As Large Language Models (LLMs) advance in natural language processing, there
+is growing interest in leveraging their capabilities to simplify software
+interactions. In this paper, we propose a novel system that integrates LLMs for
+both classifying natural language inputs into corresponding API calls and
+automating the creation of sample datasets tailored to specific API functions.
+By classifying natural language commands, our system allows users to invoke
+complex software functionalities through simple inputs, improving interaction
+efficiency and lowering the barrier to software utilization. Our dataset
+generation approach also enables the efficient and systematic evaluation of
+different LLMs in classifying API calls, offering a practical tool for
+developers or business owners to assess the suitability of LLMs for customized
+API management. We conduct experiments on several prominent LLMs using
+generated sample datasets for various API functions. The results show that
+GPT-4 achieves a high classification accuracy of 0.996, while LLaMA-3-8B
+performs much worse at 0.759. These findings highlight the potential of LLMs to
+transform API management and validate the effectiveness of our system in
+guiding model testing and selection across diverse applications.
+
+Title: Hackphyr: A Local Fine-Tuned LLM Agent for Network Security Environments
+URL: http://arxiv.org/abs/2409.11276v1
+Summary: Large Language Models (LLMs) have shown remarkable potential across various
+domains, including cybersecurity. Using commercial cloud-based LLMs may be
+undesirable due to privacy concerns, costs, and network connectivity
+constraints. In this paper, we present Hackphyr, a locally fine-tuned LLM to be
+used as a red-team agent within network security environments. Our fine-tuned 7
+billion parameter model can run on a single GPU card and achieves performance
+comparable with much larger and more powerful commercial models such as GPT-4.
+Hackphyr clearly outperforms other models, including GPT-3.5-turbo, and
+baselines, such as Q-learning agents in complex, previously unseen scenarios.
+To achieve this performance, we generated a new task-specific cybersecurity
+dataset to enhance the base model's capabilities. Finally, we conducted a
+comprehensive analysis of the agents' behaviors that provides insights into the
+planning abilities and potential shortcomings of such agents, contributing to
+the broader understanding of LLM-based agents in cybersecurity contexts
+
+Title: Investigating Context-Faithfulness in Large Language Models: The Roles of Memory Strength and Evidence Style
+URL: http://arxiv.org/abs/2409.10955v1
+Summary: Retrieval-augmented generation (RAG) improves Large Language Models (LLMs) by
+incorporating external information into the response generation process.
+However, how context-faithful LLMs are and what factors influence LLMs'
+context-faithfulness remain largely unexplored. In this study, we investigate
+the impact of memory strength and evidence presentation on LLMs' receptiveness
+to external evidence. We introduce a method to quantify the memory strength of
+LLMs by measuring the divergence in LLMs' responses to different paraphrases of
+the same question, which is not considered by previous works. We also generate
+evidence in various styles to evaluate the effects of evidence in different
+styles. Two datasets are used for evaluation: Natural Questions (NQ) with
+popular questions and popQA featuring long-tail questions. Our results show
+that for questions with high memory strength, LLMs are more likely to rely on
+internal memory, particularly for larger LLMs such as GPT-4. On the other hand,
+presenting paraphrased evidence significantly increases LLMs' receptiveness
+compared to simple repetition or adding details.
+
+Title: GPT takes the SAT: Tracing changes in Test Difficulty and Math Performance of Students
+URL: http://arxiv.org/abs/2409.10750v1
+Summary: Scholastic Aptitude Test (SAT) is crucial for college admissions but its
+effectiveness and relevance are increasingly questioned. This paper enhances
+Synthetic Control methods by introducing \"Transformed Control\", a novel method
+that employs Large Language Models (LLMs) powered by Artificial Intelligence to
+generate control groups. We utilize OpenAI's API to generate a control group
+where GPT-4, or ChatGPT, takes multiple SATs annually from 2008 to 2023. This
+control group helps analyze shifts in SAT math difficulty over time, starting
+from the baseline year of 2008. Using parallel trends, we calculate the Average
+Difference in Scores (ADS) to assess changes in high school students' math
+performance. Our results indicate a significant decrease in the difficulty of
+the SAT math section over time, alongside a decline in students' math
+performance. The analysis shows a 71-point drop in the rigor of SAT math from
+2008 to 2023, with student performance decreasing by 36 points, resulting in a
+107-point total divergence in average student math performance. We investigate
+possible mechanisms for this decline in math proficiency, such as changing
+university selection criteria, increased screen time, grade inflation, and
+worsening adolescent mental health. Disparities among demographic groups show a
+104-point drop for White students, 84 points for Black students, and 53 points
+for Asian students. Male students saw a 117-point reduction, while female
+students had a 100-point decrease.
+
+Title: LLMs for clinical risk prediction
+URL: http://arxiv.org/abs/2409.10191v1
+Summary: This study compares the efficacy of GPT-4 and clinalytix Medical AI in
+predicting the clinical risk of delirium development. Findings indicate that
+GPT-4 exhibited significant deficiencies in identifying positive cases and
+struggled to provide reliable probability estimates for delirium risk, while
+clinalytix Medical AI demonstrated superior accuracy. A thorough analysis of
+the large language model's (LLM) outputs elucidated potential causes for these
+discrepancies, consistent with limitations reported in extant literature. These
+results underscore the challenges LLMs face in accurately diagnosing conditions
+and interpreting complex clinical data. While LLMs hold substantial potential
+in healthcare, they are currently unsuitable for independent clinical
+decision-making. Instead, they should be employed in assistive roles,
+complementing clinical expertise. Continued human oversight remains essential
+to ensure optimal outcomes for both patients and healthcare providers.
+
+Title: MindGuard: Towards Accessible and Sitgma-free Mental Health First Aid via Edge LLM
+URL: http://arxiv.org/abs/2409.10064v1
+Summary: Mental health disorders are among the most prevalent diseases worldwide,
+affecting nearly one in four people. Despite their widespread impact, the
+intervention rate remains below 25%, largely due to the significant cooperation
+required from patients for both diagnosis and intervention. The core issue
+behind this low treatment rate is stigma, which discourages over half of those
+affected from seeking help. This paper presents MindGuard, an accessible,
+stigma-free, and professional mobile mental healthcare system designed to
+provide mental health first aid. The heart of MindGuard is an innovative edge
+LLM, equipped with professional mental health knowledge, that seamlessly
+integrates objective mobile sensor data with subjective Ecological Momentary
+Assessment records to deliver personalized screening and intervention
+conversations. We conduct a broad evaluation of MindGuard using open datasets
+spanning four years and real-world deployment across various mobile devices
+involving 20 subjects for two weeks. Remarkably, MindGuard achieves results
+comparable to GPT-4 and outperforms its counterpart with more than 10 times the
+model size. We believe that MindGuard paves the way for mobile LLM
+applications, potentially revolutionizing mental healthcare practices by
+substituting self-reporting and intervention conversations with passive,
+integrated monitoring within daily life, thus ensuring accessible and
+stigma-free mental health support.
+
+Title: SelECT-SQL: Self-correcting ensemble Chain-of-Thought for Text-to-SQL
+URL: http://arxiv.org/abs/2409.10007v1
+Summary: In recent years,Text-to-SQL, the problem of automatically converting
+questions posed in natural language to formal SQL queries, has emerged as an
+important problem at the intersection of natural language processing and data
+management research. Large language models (LLMs) have delivered impressive
+performance when used in an off-the-shelf performance, but still fall
+significantly short of expected expert-level performance. Errors are especially
+probable when a nuanced understanding is needed of database schemas, questions,
+and SQL clauses to do proper Text-to-SQL conversion. We introduce SelECT-SQL, a
+novel in-context learning solution that uses an algorithmic combination of
+chain-of-thought (CoT) prompting, self-correction, and ensemble methods to
+yield a new state-of-the-art result on challenging Text-to-SQL benchmarks.
+Specifically, when configured using GPT-3.5-Turbo as the base LLM, SelECT-SQL
+achieves 84.2% execution accuracy on the Spider leaderboard's development set,
+exceeding both the best results of other baseline GPT-3.5-Turbo-based solutions
+(81.1%), and the peak performance (83.5%) of the GPT-4 result reported on the
+leaderboard.
+
+Title: GP-GPT: Large Language Model for Gene-Phenotype Mapping
+URL: http://arxiv.org/abs/2409.09825v1
+Summary: Pre-trained large language models(LLMs) have attracted increasing attention
+in biomedical domains due to their success in natural language processing.
+However, the complex traits and heterogeneity of multi-sources genomics data
+pose significant challenges when adapting these models to the bioinformatics
+and biomedical field. To address these challenges, we present GP-GPT, the first
+specialized large language model for genetic-phenotype knowledge representation
+and genomics relation analysis. Our model is fine-tuned in two stages on a
+comprehensive corpus composed of over 3,000,000 terms in genomics, proteomics,
+and medical genetics, derived from multiple large-scale validated datasets and
+scientific publications. GP-GPT demonstrates proficiency in accurately
+retrieving medical genetics information and performing common genomics analysis
+tasks, such as genomics information retrieval and relationship determination.
+Comparative experiments across domain-specific tasks reveal that GP-GPT
+outperforms state-of-the-art LLMs, including Llama2, Llama3 and GPT-4. These
+results highlight GP-GPT's potential to enhance genetic disease relation
+research and facilitate accurate and efficient analysis in the fields of
+genomics and medical genetics. Our investigation demonstrated the subtle
+changes of bio-factor entities' representations in the GP-GPT, which suggested
+the opportunities for the application of LLMs to advancing gene-phenotype
+research.
+
+"]
+	1727063453.266603 -> "140545503660304_2" [label=Success color="#00FF00" dir=both fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0]
+	"140545503633808_3" [label="chat_manager (3)" color="#C8A8A2" fillcolor="#FBDBD5" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545503660304_2" -> "140545503633808_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="exitcode: 0 (execution succeeded)
+Code output: 
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: arxiv in /home/autogen-ai/.local/lib/python3.11/site-packages (2.1.3)
+Requirement already satisfied: feedparser~=6.0.10 in /home/autogen-ai/.local/lib/python3.11/site-packages (from arxiv) (6.0.11)
+Requirement already satisfied: requests~=2.32.0 in /usr/local/lib/python3.11/site-packages (from arxiv) (2.32.3)
+Requirement already satisfied: sgmllib3k in /home/autogen-ai/.local/lib/python3.11/site-packages (from feedparser~=6.0.10->arxiv) (1.0.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (3.3.2)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (3.7)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (2.2.2)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (2024.7.4)
+
+Title: Human-like Affective Cognition in Foundation Models
+URL: http://arxiv.org/abs/2409.11733v2
+Summary: Understanding emotions is fundamental to human interaction and experience.
+Humans easily infer emotions from situations or facial expressions, situations
+from emotions, and do a variety of other affective cognition. How adept is
+modern AI at these inferences? We introduce an evaluation framework for testing
+affective cognition in foundation models. Starting from psychological theory,
+we generate 1,280 diverse scenarios exploring relationships between appraisals,
+emotions, expressions, and outcomes. We evaluate the abilities of foundation
+models (GPT-4, Claude-3, Gemini-1.5-Pro) and humans (N = 567) across carefully
+selected conditions. Our results show foundation models tend to agree with
+human intuitions, matching or exceeding interparticipant agreement. In some
+conditions, models are ``superhuman'' -- they better predict modal human
+judgements than the average human. All models benefit from chain-of-thought
+reasoning. This suggests foundation models have acquired a human-like
+understanding of emotions and their influence on beliefs and behavior.
+
+Title: From Lists to Emojis: How Format Bias Affects Model Alignment
+URL: http://arxiv.org/abs/2409.11704v1
+Summary: In this paper, we study format biases in reinforcement learning from human
+feedback (RLHF). We observe that many widely-used preference models, including
+human evaluators, GPT-4, and top-ranking models on the RewardBench benchmark,
+exhibit strong biases towards specific format patterns, such as lists, links,
+bold text, and emojis. Furthermore, large language models (LLMs) can exploit
+these biases to achieve higher rankings on popular benchmarks like AlpacaEval
+and LMSYS Chatbot Arena. One notable example of this is verbosity bias, where
+current preference models favor longer responses that appear more
+comprehensive, even when their quality is equal to or lower than shorter,
+competing responses. However, format biases beyond verbosity remain largely
+underexplored in the literature. In this work, we extend the study of biases in
+preference learning beyond the commonly recognized length bias, offering a
+comprehensive analysis of a wider range of format biases. Additionally, we show
+that with a small amount of biased data (less than 1%), we can inject
+significant bias into the reward model. Moreover, these format biases can also
+be easily exploited by downstream alignment algorithms, such as best-of-n
+sampling and online iterative DPO, as it is usually easier to manipulate the
+format than to improve the quality of responses. Our findings emphasize the
+need to disentangle format and content both for designing alignment algorithms
+and evaluating models.
+
+Title: Harnessing LLMs for API Interactions: A Framework for Classification and Synthetic Data Generation
+URL: http://arxiv.org/abs/2409.11703v1
+Summary: As Large Language Models (LLMs) advance in natural language processing, there
+is growing interest in leveraging their capabilities to simplify software
+interactions. In this paper, we propose a novel system that integrates LLMs for
+both classifying natural language inputs into corresponding API calls and
+automating the creation of sample datasets tailored to specific API functions.
+By classifying natural language commands, our system allows users to invoke
+complex software functionalities through simple inputs, improving interaction
+efficiency and lowering the barrier to software utilization. Our dataset
+generation approach also enables the efficient and systematic evaluation of
+different LLMs in classifying API calls, offering a practical tool for
+developers or business owners to assess the suitability of LLMs for customized
+API management. We conduct experiments on several prominent LLMs using
+generated sample datasets for various API functions. The results show that
+GPT-4 achieves a high classification accuracy of 0.996, while LLaMA-3-8B
+performs much worse at 0.759. These findings highlight the potential of LLMs to
+transform API management and validate the effectiveness of our system in
+guiding model testing and selection across diverse applications.
+
+Title: Hackphyr: A Local Fine-Tuned LLM Agent for Network Security Environments
+URL: http://arxiv.org/abs/2409.11276v1
+Summary: Large Language Models (LLMs) have shown remarkable potential across various
+domains, including cybersecurity. Using commercial cloud-based LLMs may be
+undesirable due to privacy concerns, costs, and network connectivity
+constraints. In this paper, we present Hackphyr, a locally fine-tuned LLM to be
+used as a red-team agent within network security environments. Our fine-tuned 7
+billion parameter model can run on a single GPU card and achieves performance
+comparable with much larger and more powerful commercial models such as GPT-4.
+Hackphyr clearly outperforms other models, including GPT-3.5-turbo, and
+baselines, such as Q-learning agents in complex, previously unseen scenarios.
+To achieve this performance, we generated a new task-specific cybersecurity
+dataset to enhance the base model's capabilities. Finally, we conducted a
+comprehensive analysis of the agents' behaviors that provides insights into the
+planning abilities and potential shortcomings of such agents, contributing to
+the broader understanding of LLM-based agents in cybersecurity contexts
+
+Title: Investigating Context-Faithfulness in Large Language Models: The Roles of Memory Strength and Evidence Style
+URL: http://arxiv.org/abs/2409.10955v1
+Summary: Retrieval-augmented generation (RAG) improves Large Language Models (LLMs) by
+incorporating external information into the response generation process.
+However, how context-faithful LLMs are and what factors influence LLMs'
+context-faithfulness remain largely unexplored. In this study, we investigate
+the impact of memory strength and evidence presentation on LLMs' receptiveness
+to external evidence. We introduce a method to quantify the memory strength of
+LLMs by measuring the divergence in LLMs' responses to different paraphrases of
+the same question, which is not considered by previous works. We also generate
+evidence in various styles to evaluate the effects of evidence in different
+styles. Two datasets are used for evaluation: Natural Questions (NQ) with
+popular questions and popQA featuring long-tail questions. Our results show
+that for questions with high memory strength, LLMs are more likely to rely on
+internal memory, particularly for larger LLMs such as GPT-4. On the other hand,
+presenting paraphrased evidence significantly increases LLMs' receptiveness
+compared to simple repetition or adding details.
+
+Title: GPT takes the SAT: Tracing changes in Test Difficulty and Math Performance of Students
+URL: http://arxiv.org/abs/2409.10750v1
+Summary: Scholastic Aptitude Test (SAT) is crucial for college admissions but its
+effectiveness and relevance are increasingly questioned. This paper enhances
+Synthetic Control methods by introducing \"Transformed Control\", a novel method
+that employs Large Language Models (LLMs) powered by Artificial Intelligence to
+generate control groups. We utilize OpenAI's API to generate a control group
+where GPT-4, or ChatGPT, takes multiple SATs annually from 2008 to 2023. This
+control group helps analyze shifts in SAT math difficulty over time, starting
+from the baseline year of 2008. Using parallel trends, we calculate the Average
+Difference in Scores (ADS) to assess changes in high school students' math
+performance. Our results indicate a significant decrease in the difficulty of
+the SAT math section over time, alongside a decline in students' math
+performance. The analysis shows a 71-point drop in the rigor of SAT math from
+2008 to 2023, with student performance decreasing by 36 points, resulting in a
+107-point total divergence in average student math performance. We investigate
+possible mechanisms for this decline in math proficiency, such as changing
+university selection criteria, increased screen time, grade inflation, and
+worsening adolescent mental health. Disparities among demographic groups show a
+104-point drop for White students, 84 points for Black students, and 53 points
+for Asian students. Male students saw a 117-point reduction, while female
+students had a 100-point decrease.
+
+Title: LLMs for clinical risk prediction
+URL: http://arxiv.org/abs/2409.10191v1
+Summary: This study compares the efficacy of GPT-4 and clinalytix Medical AI in
+predicting the clinical risk of delirium development. Findings indicate that
+GPT-4 exhibited significant deficiencies in identifying positive cases and
+struggled to provide reliable probability estimates for delirium risk, while
+clinalytix Medical AI demonstrated superior accuracy. A thorough analysis of
+the large language model's (LLM) outputs elucidated potential causes for these
+discrepancies, consistent with limitations reported in extant literature. These
+results underscore the challenges LLMs face in accurately diagnosing conditions
+and interpreting complex clinical data. While LLMs hold substantial potential
+in healthcare, they are currently unsuitable for independent clinical
+decision-making. Instead, they should be employed in assistive roles,
+complementing clinical expertise. Continued human oversight remains essential
+to ensure optimal outcomes for both patients and healthcare providers.
+
+Title: MindGuard: Towards Accessible and Sitgma-free Mental Health First Aid via Edge LLM
+URL: http://arxiv.org/abs/2409.10064v1
+Summary: Mental health disorders are among the most prevalent diseases worldwide,
+affecting nearly one in four people. Despite their widespread impact, the
+intervention rate remains below 25%, largely due to the significant cooperation
+required from patients for both diagnosis and intervention. The core issue
+behind this low treatment rate is stigma, which discourages over half of those
+affected from seeking help. This paper presents MindGuard, an accessible,
+stigma-free, and professional mobile mental healthcare system designed to
+provide mental health first aid. The heart of MindGuard is an innovative edge
+LLM, equipped with professional mental health knowledge, that seamlessly
+integrates objective mobile sensor data with subjective Ecological Momentary
+Assessment records to deliver personalized screening and intervention
+conversations. We conduct a broad evaluation of MindGuard using open datasets
+spanning four years and real-world deployment across various mobile devices
+involving 20 subjects for two weeks. Remarkably, MindGuard achieves results
+comparable to GPT-4 and outperforms its counterpart with more than 10 times the
+model size. We believe that MindGuard paves the way for mobile LLM
+applications, potentially revolutionizing mental healthcare practices by
+substituting self-reporting and intervention conversations with passive,
+integrated monitoring within daily life, thus ensuring accessible and
+stigma-free mental health support.
+
+Title: SelECT-SQL: Self-correcting ensemble Chain-of-Thought for Text-to-SQL
+URL: http://arxiv.org/abs/2409.10007v1
+Summary: In recent years,Text-to-SQL, the problem of automatically converting
+questions posed in natural language to formal SQL queries, has emerged as an
+important problem at the intersection of natural language processing and data
+management research. Large language models (LLMs) have delivered impressive
+performance when used in an off-the-shelf performance, but still fall
+significantly short of expected expert-level performance. Errors are especially
+probable when a nuanced understanding is needed of database schemas, questions,
+and SQL clauses to do proper Text-to-SQL conversion. We introduce SelECT-SQL, a
+novel in-context learning solution that uses an algorithmic combination of
+chain-of-thought (CoT) prompting, self-correction, and ensemble methods to
+yield a new state-of-the-art result on challenging Text-to-SQL benchmarks.
+Specifically, when configured using GPT-3.5-Turbo as the base LLM, SelECT-SQL
+achieves 84.2% execution accuracy on the Spider leaderboard's development set,
+exceeding both the best results of other baseline GPT-3.5-Turbo-based solutions
+(81.1%), and the peak performance (83.5%) of the GPT-4 result reported on the
+leaderboard.
+
+Title: GP-GPT: Large Language Model for Gene-Phenotype Mapping
+URL: http://arxiv.org/abs/2409.09825v1
+Summary: Pre-trained large language models(LLMs) have attracted increasing attention
+in biomedical domains due to their success in natural language processing.
+However, the complex traits and heterogeneity of multi-sources genomics data
+pose significant challenges when adapting these models to the bioinformatics
+and biomedical field. To address these challenges, we present GP-GPT, the first
+specialized large language model for genetic-phenotype knowledge representation
+and genomics relation analysis. Our model is fine-tuned in two stages on a
+comprehensive corpus composed of over 3,000,000 terms in genomics, proteomics,
+and medical genetics, derived from multiple large-scale validated datasets and
+scientific publications. GP-GPT demonstrates proficiency in accurately
+retrieving medical genetics information and performing common genomics analysis
+tasks, such as genomics information retrieval and relationship determination.
+Comparative experiments across domain-specific tasks reveal that GP-GPT
+outperforms state-of-the-art LLMs, including Llama2, Llama3 and GPT-4. These
+results highlight GP-GPT's potential to enhance genetic disease relation
+research and facilitate accurate and efficient analysis in the fields of
+genomics and medical genetics. Our investigation demonstrated the subtle
+changes of bio-factor entities' representations in the GP-GPT, which suggested
+the opportunities for the application of LLMs to advancing gene-phenotype
+research.
+
+" style=solid]
+	"140545493979024_2" [label="Coder (2)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545503633808_3" -> "140545493979024_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="exitcode: 0 (execution succeeded)
+Code output: 
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: arxiv in /home/autogen-ai/.local/lib/python3.11/site-packages (2.1.3)
+Requirement already satisfied: feedparser~=6.0.10 in /home/autogen-ai/.local/lib/python3.11/site-packages (from arxiv) (6.0.11)
+Requirement already satisfied: requests~=2.32.0 in /usr/local/lib/python3.11/site-packages (from arxiv) (2.32.3)
+Requirement already satisfied: sgmllib3k in /home/autogen-ai/.local/lib/python3.11/site-packages (from feedparser~=6.0.10->arxiv) (1.0.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (3.3.2)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (3.7)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (2.2.2)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (2024.7.4)
+
+Title: Human-like Affective Cognition in Foundation Models
+URL: http://arxiv.org/abs/2409.11733v2
+Summary: Understanding emotions is fundamental to human interaction and experience.
+Humans easily infer emotions from situations or facial expressions, situations
+from emotions, and do a variety of other affective cognition. How adept is
+modern AI at these inferences? We introduce an evaluation framework for testing
+affective cognition in foundation models. Starting from psychological theory,
+we generate 1,280 diverse scenarios exploring relationships between appraisals,
+emotions, expressions, and outcomes. We evaluate the abilities of foundation
+models (GPT-4, Claude-3, Gemini-1.5-Pro) and humans (N = 567) across carefully
+selected conditions. Our results show foundation models tend to agree with
+human intuitions, matching or exceeding interparticipant agreement. In some
+conditions, models are ``superhuman'' -- they better predict modal human
+judgements than the average human. All models benefit from chain-of-thought
+reasoning. This suggests foundation models have acquired a human-like
+understanding of emotions and their influence on beliefs and behavior.
+
+Title: From Lists to Emojis: How Format Bias Affects Model Alignment
+URL: http://arxiv.org/abs/2409.11704v1
+Summary: In this paper, we study format biases in reinforcement learning from human
+feedback (RLHF). We observe that many widely-used preference models, including
+human evaluators, GPT-4, and top-ranking models on the RewardBench benchmark,
+exhibit strong biases towards specific format patterns, such as lists, links,
+bold text, and emojis. Furthermore, large language models (LLMs) can exploit
+these biases to achieve higher rankings on popular benchmarks like AlpacaEval
+and LMSYS Chatbot Arena. One notable example of this is verbosity bias, where
+current preference models favor longer responses that appear more
+comprehensive, even when their quality is equal to or lower than shorter,
+competing responses. However, format biases beyond verbosity remain largely
+underexplored in the literature. In this work, we extend the study of biases in
+preference learning beyond the commonly recognized length bias, offering a
+comprehensive analysis of a wider range of format biases. Additionally, we show
+that with a small amount of biased data (less than 1%), we can inject
+significant bias into the reward model. Moreover, these format biases can also
+be easily exploited by downstream alignment algorithms, such as best-of-n
+sampling and online iterative DPO, as it is usually easier to manipulate the
+format than to improve the quality of responses. Our findings emphasize the
+need to disentangle format and content both for designing alignment algorithms
+and evaluating models.
+
+Title: Harnessing LLMs for API Interactions: A Framework for Classification and Synthetic Data Generation
+URL: http://arxiv.org/abs/2409.11703v1
+Summary: As Large Language Models (LLMs) advance in natural language processing, there
+is growing interest in leveraging their capabilities to simplify software
+interactions. In this paper, we propose a novel system that integrates LLMs for
+both classifying natural language inputs into corresponding API calls and
+automating the creation of sample datasets tailored to specific API functions.
+By classifying natural language commands, our system allows users to invoke
+complex software functionalities through simple inputs, improving interaction
+efficiency and lowering the barrier to software utilization. Our dataset
+generation approach also enables the efficient and systematic evaluation of
+different LLMs in classifying API calls, offering a practical tool for
+developers or business owners to assess the suitability of LLMs for customized
+API management. We conduct experiments on several prominent LLMs using
+generated sample datasets for various API functions. The results show that
+GPT-4 achieves a high classification accuracy of 0.996, while LLaMA-3-8B
+performs much worse at 0.759. These findings highlight the potential of LLMs to
+transform API management and validate the effectiveness of our system in
+guiding model testing and selection across diverse applications.
+
+Title: Hackphyr: A Local Fine-Tuned LLM Agent for Network Security Environments
+URL: http://arxiv.org/abs/2409.11276v1
+Summary: Large Language Models (LLMs) have shown remarkable potential across various
+domains, including cybersecurity. Using commercial cloud-based LLMs may be
+undesirable due to privacy concerns, costs, and network connectivity
+constraints. In this paper, we present Hackphyr, a locally fine-tuned LLM to be
+used as a red-team agent within network security environments. Our fine-tuned 7
+billion parameter model can run on a single GPU card and achieves performance
+comparable with much larger and more powerful commercial models such as GPT-4.
+Hackphyr clearly outperforms other models, including GPT-3.5-turbo, and
+baselines, such as Q-learning agents in complex, previously unseen scenarios.
+To achieve this performance, we generated a new task-specific cybersecurity
+dataset to enhance the base model's capabilities. Finally, we conducted a
+comprehensive analysis of the agents' behaviors that provides insights into the
+planning abilities and potential shortcomings of such agents, contributing to
+the broader understanding of LLM-based agents in cybersecurity contexts
+
+Title: Investigating Context-Faithfulness in Large Language Models: The Roles of Memory Strength and Evidence Style
+URL: http://arxiv.org/abs/2409.10955v1
+Summary: Retrieval-augmented generation (RAG) improves Large Language Models (LLMs) by
+incorporating external information into the response generation process.
+However, how context-faithful LLMs are and what factors influence LLMs'
+context-faithfulness remain largely unexplored. In this study, we investigate
+the impact of memory strength and evidence presentation on LLMs' receptiveness
+to external evidence. We introduce a method to quantify the memory strength of
+LLMs by measuring the divergence in LLMs' responses to different paraphrases of
+the same question, which is not considered by previous works. We also generate
+evidence in various styles to evaluate the effects of evidence in different
+styles. Two datasets are used for evaluation: Natural Questions (NQ) with
+popular questions and popQA featuring long-tail questions. Our results show
+that for questions with high memory strength, LLMs are more likely to rely on
+internal memory, particularly for larger LLMs such as GPT-4. On the other hand,
+presenting paraphrased evidence significantly increases LLMs' receptiveness
+compared to simple repetition or adding details.
+
+Title: GPT takes the SAT: Tracing changes in Test Difficulty and Math Performance of Students
+URL: http://arxiv.org/abs/2409.10750v1
+Summary: Scholastic Aptitude Test (SAT) is crucial for college admissions but its
+effectiveness and relevance are increasingly questioned. This paper enhances
+Synthetic Control methods by introducing \"Transformed Control\", a novel method
+that employs Large Language Models (LLMs) powered by Artificial Intelligence to
+generate control groups. We utilize OpenAI's API to generate a control group
+where GPT-4, or ChatGPT, takes multiple SATs annually from 2008 to 2023. This
+control group helps analyze shifts in SAT math difficulty over time, starting
+from the baseline year of 2008. Using parallel trends, we calculate the Average
+Difference in Scores (ADS) to assess changes in high school students' math
+performance. Our results indicate a significant decrease in the difficulty of
+the SAT math section over time, alongside a decline in students' math
+performance. The analysis shows a 71-point drop in the rigor of SAT math from
+2008 to 2023, with student performance decreasing by 36 points, resulting in a
+107-point total divergence in average student math performance. We investigate
+possible mechanisms for this decline in math proficiency, such as changing
+university selection criteria, increased screen time, grade inflation, and
+worsening adolescent mental health. Disparities among demographic groups show a
+104-point drop for White students, 84 points for Black students, and 53 points
+for Asian students. Male students saw a 117-point reduction, while female
+students had a 100-point decrease.
+
+Title: LLMs for clinical risk prediction
+URL: http://arxiv.org/abs/2409.10191v1
+Summary: This study compares the efficacy of GPT-4 and clinalytix Medical AI in
+predicting the clinical risk of delirium development. Findings indicate that
+GPT-4 exhibited significant deficiencies in identifying positive cases and
+struggled to provide reliable probability estimates for delirium risk, while
+clinalytix Medical AI demonstrated superior accuracy. A thorough analysis of
+the large language model's (LLM) outputs elucidated potential causes for these
+discrepancies, consistent with limitations reported in extant literature. These
+results underscore the challenges LLMs face in accurately diagnosing conditions
+and interpreting complex clinical data. While LLMs hold substantial potential
+in healthcare, they are currently unsuitable for independent clinical
+decision-making. Instead, they should be employed in assistive roles,
+complementing clinical expertise. Continued human oversight remains essential
+to ensure optimal outcomes for both patients and healthcare providers.
+
+Title: MindGuard: Towards Accessible and Sitgma-free Mental Health First Aid via Edge LLM
+URL: http://arxiv.org/abs/2409.10064v1
+Summary: Mental health disorders are among the most prevalent diseases worldwide,
+affecting nearly one in four people. Despite their widespread impact, the
+intervention rate remains below 25%, largely due to the significant cooperation
+required from patients for both diagnosis and intervention. The core issue
+behind this low treatment rate is stigma, which discourages over half of those
+affected from seeking help. This paper presents MindGuard, an accessible,
+stigma-free, and professional mobile mental healthcare system designed to
+provide mental health first aid. The heart of MindGuard is an innovative edge
+LLM, equipped with professional mental health knowledge, that seamlessly
+integrates objective mobile sensor data with subjective Ecological Momentary
+Assessment records to deliver personalized screening and intervention
+conversations. We conduct a broad evaluation of MindGuard using open datasets
+spanning four years and real-world deployment across various mobile devices
+involving 20 subjects for two weeks. Remarkably, MindGuard achieves results
+comparable to GPT-4 and outperforms its counterpart with more than 10 times the
+model size. We believe that MindGuard paves the way for mobile LLM
+applications, potentially revolutionizing mental healthcare practices by
+substituting self-reporting and intervention conversations with passive,
+integrated monitoring within daily life, thus ensuring accessible and
+stigma-free mental health support.
+
+Title: SelECT-SQL: Self-correcting ensemble Chain-of-Thought for Text-to-SQL
+URL: http://arxiv.org/abs/2409.10007v1
+Summary: In recent years,Text-to-SQL, the problem of automatically converting
+questions posed in natural language to formal SQL queries, has emerged as an
+important problem at the intersection of natural language processing and data
+management research. Large language models (LLMs) have delivered impressive
+performance when used in an off-the-shelf performance, but still fall
+significantly short of expected expert-level performance. Errors are especially
+probable when a nuanced understanding is needed of database schemas, questions,
+and SQL clauses to do proper Text-to-SQL conversion. We introduce SelECT-SQL, a
+novel in-context learning solution that uses an algorithmic combination of
+chain-of-thought (CoT) prompting, self-correction, and ensemble methods to
+yield a new state-of-the-art result on challenging Text-to-SQL benchmarks.
+Specifically, when configured using GPT-3.5-Turbo as the base LLM, SelECT-SQL
+achieves 84.2% execution accuracy on the Spider leaderboard's development set,
+exceeding both the best results of other baseline GPT-3.5-Turbo-based solutions
+(81.1%), and the peak performance (83.5%) of the GPT-4 result reported on the
+leaderboard.
+
+Title: GP-GPT: Large Language Model for Gene-Phenotype Mapping
+URL: http://arxiv.org/abs/2409.09825v1
+Summary: Pre-trained large language models(LLMs) have attracted increasing attention
+in biomedical domains due to their success in natural language processing.
+However, the complex traits and heterogeneity of multi-sources genomics data
+pose significant challenges when adapting these models to the bioinformatics
+and biomedical field. To address these challenges, we present GP-GPT, the first
+specialized large language model for genetic-phenotype knowledge representation
+and genomics relation analysis. Our model is fine-tuned in two stages on a
+comprehensive corpus composed of over 3,000,000 terms in genomics, proteomics,
+and medical genetics, derived from multiple large-scale validated datasets and
+scientific publications. GP-GPT demonstrates proficiency in accurately
+retrieving medical genetics information and performing common genomics analysis
+tasks, such as genomics information retrieval and relationship determination.
+Comparative experiments across domain-specific tasks reveal that GP-GPT
+outperforms state-of-the-art LLMs, including Llama2, Llama3 and GPT-4. These
+results highlight GP-GPT's potential to enhance genetic disease relation
+research and facilitate accurate and efficient analysis in the fields of
+genomics and medical genetics. Our investigation demonstrated the subtle
+changes of bio-factor entities' representations in the GP-GPT, which suggested
+the opportunities for the application of LLMs to advancing gene-phenotype
+research.
+
+" style=dashed]
+	"140545494022480_3" [label="Product_manager (3)" color="#BA847A" fillcolor="#EDB7AD" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545503633808_3" -> "140545494022480_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="exitcode: 0 (execution succeeded)
+Code output: 
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: arxiv in /home/autogen-ai/.local/lib/python3.11/site-packages (2.1.3)
+Requirement already satisfied: feedparser~=6.0.10 in /home/autogen-ai/.local/lib/python3.11/site-packages (from arxiv) (6.0.11)
+Requirement already satisfied: requests~=2.32.0 in /usr/local/lib/python3.11/site-packages (from arxiv) (2.32.3)
+Requirement already satisfied: sgmllib3k in /home/autogen-ai/.local/lib/python3.11/site-packages (from feedparser~=6.0.10->arxiv) (1.0.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (3.3.2)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (3.7)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (2.2.2)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/site-packages (from requests~=2.32.0->arxiv) (2024.7.4)
+
+Title: Human-like Affective Cognition in Foundation Models
+URL: http://arxiv.org/abs/2409.11733v2
+Summary: Understanding emotions is fundamental to human interaction and experience.
+Humans easily infer emotions from situations or facial expressions, situations
+from emotions, and do a variety of other affective cognition. How adept is
+modern AI at these inferences? We introduce an evaluation framework for testing
+affective cognition in foundation models. Starting from psychological theory,
+we generate 1,280 diverse scenarios exploring relationships between appraisals,
+emotions, expressions, and outcomes. We evaluate the abilities of foundation
+models (GPT-4, Claude-3, Gemini-1.5-Pro) and humans (N = 567) across carefully
+selected conditions. Our results show foundation models tend to agree with
+human intuitions, matching or exceeding interparticipant agreement. In some
+conditions, models are ``superhuman'' -- they better predict modal human
+judgements than the average human. All models benefit from chain-of-thought
+reasoning. This suggests foundation models have acquired a human-like
+understanding of emotions and their influence on beliefs and behavior.
+
+Title: From Lists to Emojis: How Format Bias Affects Model Alignment
+URL: http://arxiv.org/abs/2409.11704v1
+Summary: In this paper, we study format biases in reinforcement learning from human
+feedback (RLHF). We observe that many widely-used preference models, including
+human evaluators, GPT-4, and top-ranking models on the RewardBench benchmark,
+exhibit strong biases towards specific format patterns, such as lists, links,
+bold text, and emojis. Furthermore, large language models (LLMs) can exploit
+these biases to achieve higher rankings on popular benchmarks like AlpacaEval
+and LMSYS Chatbot Arena. One notable example of this is verbosity bias, where
+current preference models favor longer responses that appear more
+comprehensive, even when their quality is equal to or lower than shorter,
+competing responses. However, format biases beyond verbosity remain largely
+underexplored in the literature. In this work, we extend the study of biases in
+preference learning beyond the commonly recognized length bias, offering a
+comprehensive analysis of a wider range of format biases. Additionally, we show
+that with a small amount of biased data (less than 1%), we can inject
+significant bias into the reward model. Moreover, these format biases can also
+be easily exploited by downstream alignment algorithms, such as best-of-n
+sampling and online iterative DPO, as it is usually easier to manipulate the
+format than to improve the quality of responses. Our findings emphasize the
+need to disentangle format and content both for designing alignment algorithms
+and evaluating models.
+
+Title: Harnessing LLMs for API Interactions: A Framework for Classification and Synthetic Data Generation
+URL: http://arxiv.org/abs/2409.11703v1
+Summary: As Large Language Models (LLMs) advance in natural language processing, there
+is growing interest in leveraging their capabilities to simplify software
+interactions. In this paper, we propose a novel system that integrates LLMs for
+both classifying natural language inputs into corresponding API calls and
+automating the creation of sample datasets tailored to specific API functions.
+By classifying natural language commands, our system allows users to invoke
+complex software functionalities through simple inputs, improving interaction
+efficiency and lowering the barrier to software utilization. Our dataset
+generation approach also enables the efficient and systematic evaluation of
+different LLMs in classifying API calls, offering a practical tool for
+developers or business owners to assess the suitability of LLMs for customized
+API management. We conduct experiments on several prominent LLMs using
+generated sample datasets for various API functions. The results show that
+GPT-4 achieves a high classification accuracy of 0.996, while LLaMA-3-8B
+performs much worse at 0.759. These findings highlight the potential of LLMs to
+transform API management and validate the effectiveness of our system in
+guiding model testing and selection across diverse applications.
+
+Title: Hackphyr: A Local Fine-Tuned LLM Agent for Network Security Environments
+URL: http://arxiv.org/abs/2409.11276v1
+Summary: Large Language Models (LLMs) have shown remarkable potential across various
+domains, including cybersecurity. Using commercial cloud-based LLMs may be
+undesirable due to privacy concerns, costs, and network connectivity
+constraints. In this paper, we present Hackphyr, a locally fine-tuned LLM to be
+used as a red-team agent within network security environments. Our fine-tuned 7
+billion parameter model can run on a single GPU card and achieves performance
+comparable with much larger and more powerful commercial models such as GPT-4.
+Hackphyr clearly outperforms other models, including GPT-3.5-turbo, and
+baselines, such as Q-learning agents in complex, previously unseen scenarios.
+To achieve this performance, we generated a new task-specific cybersecurity
+dataset to enhance the base model's capabilities. Finally, we conducted a
+comprehensive analysis of the agents' behaviors that provides insights into the
+planning abilities and potential shortcomings of such agents, contributing to
+the broader understanding of LLM-based agents in cybersecurity contexts
+
+Title: Investigating Context-Faithfulness in Large Language Models: The Roles of Memory Strength and Evidence Style
+URL: http://arxiv.org/abs/2409.10955v1
+Summary: Retrieval-augmented generation (RAG) improves Large Language Models (LLMs) by
+incorporating external information into the response generation process.
+However, how context-faithful LLMs are and what factors influence LLMs'
+context-faithfulness remain largely unexplored. In this study, we investigate
+the impact of memory strength and evidence presentation on LLMs' receptiveness
+to external evidence. We introduce a method to quantify the memory strength of
+LLMs by measuring the divergence in LLMs' responses to different paraphrases of
+the same question, which is not considered by previous works. We also generate
+evidence in various styles to evaluate the effects of evidence in different
+styles. Two datasets are used for evaluation: Natural Questions (NQ) with
+popular questions and popQA featuring long-tail questions. Our results show
+that for questions with high memory strength, LLMs are more likely to rely on
+internal memory, particularly for larger LLMs such as GPT-4. On the other hand,
+presenting paraphrased evidence significantly increases LLMs' receptiveness
+compared to simple repetition or adding details.
+
+Title: GPT takes the SAT: Tracing changes in Test Difficulty and Math Performance of Students
+URL: http://arxiv.org/abs/2409.10750v1
+Summary: Scholastic Aptitude Test (SAT) is crucial for college admissions but its
+effectiveness and relevance are increasingly questioned. This paper enhances
+Synthetic Control methods by introducing \"Transformed Control\", a novel method
+that employs Large Language Models (LLMs) powered by Artificial Intelligence to
+generate control groups. We utilize OpenAI's API to generate a control group
+where GPT-4, or ChatGPT, takes multiple SATs annually from 2008 to 2023. This
+control group helps analyze shifts in SAT math difficulty over time, starting
+from the baseline year of 2008. Using parallel trends, we calculate the Average
+Difference in Scores (ADS) to assess changes in high school students' math
+performance. Our results indicate a significant decrease in the difficulty of
+the SAT math section over time, alongside a decline in students' math
+performance. The analysis shows a 71-point drop in the rigor of SAT math from
+2008 to 2023, with student performance decreasing by 36 points, resulting in a
+107-point total divergence in average student math performance. We investigate
+possible mechanisms for this decline in math proficiency, such as changing
+university selection criteria, increased screen time, grade inflation, and
+worsening adolescent mental health. Disparities among demographic groups show a
+104-point drop for White students, 84 points for Black students, and 53 points
+for Asian students. Male students saw a 117-point reduction, while female
+students had a 100-point decrease.
+
+Title: LLMs for clinical risk prediction
+URL: http://arxiv.org/abs/2409.10191v1
+Summary: This study compares the efficacy of GPT-4 and clinalytix Medical AI in
+predicting the clinical risk of delirium development. Findings indicate that
+GPT-4 exhibited significant deficiencies in identifying positive cases and
+struggled to provide reliable probability estimates for delirium risk, while
+clinalytix Medical AI demonstrated superior accuracy. A thorough analysis of
+the large language model's (LLM) outputs elucidated potential causes for these
+discrepancies, consistent with limitations reported in extant literature. These
+results underscore the challenges LLMs face in accurately diagnosing conditions
+and interpreting complex clinical data. While LLMs hold substantial potential
+in healthcare, they are currently unsuitable for independent clinical
+decision-making. Instead, they should be employed in assistive roles,
+complementing clinical expertise. Continued human oversight remains essential
+to ensure optimal outcomes for both patients and healthcare providers.
+
+Title: MindGuard: Towards Accessible and Sitgma-free Mental Health First Aid via Edge LLM
+URL: http://arxiv.org/abs/2409.10064v1
+Summary: Mental health disorders are among the most prevalent diseases worldwide,
+affecting nearly one in four people. Despite their widespread impact, the
+intervention rate remains below 25%, largely due to the significant cooperation
+required from patients for both diagnosis and intervention. The core issue
+behind this low treatment rate is stigma, which discourages over half of those
+affected from seeking help. This paper presents MindGuard, an accessible,
+stigma-free, and professional mobile mental healthcare system designed to
+provide mental health first aid. The heart of MindGuard is an innovative edge
+LLM, equipped with professional mental health knowledge, that seamlessly
+integrates objective mobile sensor data with subjective Ecological Momentary
+Assessment records to deliver personalized screening and intervention
+conversations. We conduct a broad evaluation of MindGuard using open datasets
+spanning four years and real-world deployment across various mobile devices
+involving 20 subjects for two weeks. Remarkably, MindGuard achieves results
+comparable to GPT-4 and outperforms its counterpart with more than 10 times the
+model size. We believe that MindGuard paves the way for mobile LLM
+applications, potentially revolutionizing mental healthcare practices by
+substituting self-reporting and intervention conversations with passive,
+integrated monitoring within daily life, thus ensuring accessible and
+stigma-free mental health support.
+
+Title: SelECT-SQL: Self-correcting ensemble Chain-of-Thought for Text-to-SQL
+URL: http://arxiv.org/abs/2409.10007v1
+Summary: In recent years,Text-to-SQL, the problem of automatically converting
+questions posed in natural language to formal SQL queries, has emerged as an
+important problem at the intersection of natural language processing and data
+management research. Large language models (LLMs) have delivered impressive
+performance when used in an off-the-shelf performance, but still fall
+significantly short of expected expert-level performance. Errors are especially
+probable when a nuanced understanding is needed of database schemas, questions,
+and SQL clauses to do proper Text-to-SQL conversion. We introduce SelECT-SQL, a
+novel in-context learning solution that uses an algorithmic combination of
+chain-of-thought (CoT) prompting, self-correction, and ensemble methods to
+yield a new state-of-the-art result on challenging Text-to-SQL benchmarks.
+Specifically, when configured using GPT-3.5-Turbo as the base LLM, SelECT-SQL
+achieves 84.2% execution accuracy on the Spider leaderboard's development set,
+exceeding both the best results of other baseline GPT-3.5-Turbo-based solutions
+(81.1%), and the peak performance (83.5%) of the GPT-4 result reported on the
+leaderboard.
+
+Title: GP-GPT: Large Language Model for Gene-Phenotype Mapping
+URL: http://arxiv.org/abs/2409.09825v1
+Summary: Pre-trained large language models(LLMs) have attracted increasing attention
+in biomedical domains due to their success in natural language processing.
+However, the complex traits and heterogeneity of multi-sources genomics data
+pose significant challenges when adapting these models to the bioinformatics
+and biomedical field. To address these challenges, we present GP-GPT, the first
+specialized large language model for genetic-phenotype knowledge representation
+and genomics relation analysis. Our model is fine-tuned in two stages on a
+comprehensive corpus composed of over 3,000,000 terms in genomics, proteomics,
+and medical genetics, derived from multiple large-scale validated datasets and
+scientific publications. GP-GPT demonstrates proficiency in accurately
+retrieving medical genetics information and performing common genomics analysis
+tasks, such as genomics information retrieval and relationship determination.
+Comparative experiments across domain-specific tasks reveal that GP-GPT
+outperforms state-of-the-art LLMs, including Llama2, Llama3 and GPT-4. These
+results highlight GP-GPT's potential to enhance genetic disease relation
+research and facilitate accurate and efficient analysis in the fields of
+genomics and medical genetics. Our investigation demonstrated the subtle
+changes of bio-factor entities' representations in the GP-GPT, which suggested
+the opportunities for the application of LLMs to advancing gene-phenotype
+research.
+
+" style=dashed]
+	"5880916f-e39e-43f6-b9cc-c3f08f2fe34d" [label=Ollama color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	subgraph "cluster_880b713e-a694-463f-95cb-d9afea637c59" {
+		color="#003535" fillcolor="#004F4F" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" label="Group Chat Auto Select Speaker" labeljust=r labelloc=b margin=35 penwidth=5 style="rounded, filled"
+		"140545531529552_5" [label="checking_agent (5)" color="#B1BBB6" fillcolor="#E4EEE9" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+		"140545503633808_3" -> "140545531529552_5" [label="Auto Select Speaker" color="#6666FF" dir=both fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="" style=dashed]
+		"140545493984976_3" [label="speaker_selection_agent (3)" color="#9AA293" fillcolor="#CDD5C6" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+		"140545531529552_5" -> "140545493984976_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Read the above conversation. Then select the next role from ['User_proxy', 'Coder', 'Product_manager'] to play. Only return the role." style=dashed]
+		"140545493984976_3" -> "5880916f-e39e-43f6-b9cc-c3f08f2fe34d" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=Product_manager]
+		"5880916f-e39e-43f6-b9cc-c3f08f2fe34d" -> "140545493984976_3" [color="#6666FF"]
+		"140545531529552_6" [label="checking_agent (6)" color="#B1BBB6" fillcolor="#E4EEE9" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+		"140545493984976_3" -> "140545531529552_6" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=Product_manager style=dashed]
+		1727063453.284174 [label=Summarize color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=parallelogram style=filled]
+		"140545531529552_6" -> 1727063453.284174 [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=Product_manager]
+		"daed95d5-cc42-4822-ae64-a65a7a1ebbe3" [label=Product_manager color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=note style=filled]
+		1727063453.284174 -> "daed95d5-cc42-4822-ae64-a65a7a1ebbe3" [label="next speaker" color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=""]
+	}
+	"0910c450-a3b9-4853-83ad-0b3a98868e4c" [label=Ollama color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"140545494022480_3" -> "0910c450-a3b9-4853-83ad-0b3a98868e4c" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="### Title: MindGuard: Towards Accessible and Stigma-free Mental Health First Aid via Edge LLM
+
+**URL:** http://arxiv.org/abs/2409.10064v1
+
+**Summary:** Mental health disorders are among the most prevalent diseases worldwide, affecting nearly one in four people. Despite their widespread impact, intervention rates remain below 25%, largely due to significant patient cooperation required for both diagnosis and intervention. The primary issue is stigma, which discourages over half of those affected from seeking help. MindGuard aims to address these challenges by providing an accessible, stigma-free, and professional mobile mental healthcare system designed for mental health first aid. At its core, MindGuard uses an innovative edge LLM equipped with professional mental health knowledge to integrate objective sensor data with subjective assessments, offering personalized screening and intervention conversations.
+
+**Methodology:** The evaluation of MindGuard involved using open datasets spanning four years and real-world deployments across various mobile devices over two weeks with 20 subjects. Remarkably, MindGuard achieved results comparable to GPT-4 and outperformed its counterpart by more than 10 times the model size.
+
+**Conclusion:** MindGuard has the potential to revolutionize mental healthcare practices by providing passive, integrated monitoring within daily life, thereby ensuring accessible and stigma-free support for both patients and healthcare providers.
+
+---
+
+### Title: SelECT-SQL: Self-correcting Ensemble Chain-of-Thought for Text-to-SQL
+
+**URL:** http://arxiv.org/abs/2409.10007v1
+
+**Summary:** Text-to-SQL is the task of converting natural language questions into SQL queries, a critical challenge in natural language processing and data management. Large language models (LLMs) perform impressively when used off-the-shelf but fall short of expected expert-level performance, especially when nuances in database schemas, questions, and SQL clauses are required. SelECT-SQL introduces an innovative solution using chain-of-thought prompting, self-correction, and ensemble methods to achieve state-of-the-art results on Text-to-SQL benchmarks.
+
+**Methodology:** Configured with GPT-3.5-Turbo as the base LLM, SelECT-SQL achieved 84.2% execution accuracy on the Spider leaderboard's development set, significantly outperforming other baseline solutions and the peak performance reported for GPT-4.
+
+**Conclusion:** SelECT-SQL has the potential to improve the reliability and accuracy of Text-to-SQL systems by providing more nuanced understanding and error correction during query generation.
+
+---
+
+### Title: GP-GPT: Large Language Model for Gene-Phenotype Mapping
+
+**URL:** http://arxiv.org/abs/2409.09825v1
+
+**Summary:** Pre-trained large language models (LLMs) have demonstrated success in natural language processing but face challenges when adapting to the complex and heterogeneous nature of genomics data. GP-GPT is the first specialized LLM designed for genetic-phenotype knowledge representation and genomics relation analysis, fine-tuned on a comprehensive corpus derived from multiple validated datasets and scientific publications.
+
+**Methodology:** The model's performance was evaluated across domain-specific tasks, demonstrating its proficiency in retrieving medical genetics information and performing common genomics analysis tasks. Comparisons with state-of-the-art LLMs like Llama2, Llama3, and GPT-4 showed that GP-GPT outperforms them.
+
+**Conclusion:** GP-GPT has the potential to enhance genetic disease relation research and facilitate accurate and efficient analysis in genomics and medical genetics by offering advanced integration of biological factors and clinical data."]
+	"0910c450-a3b9-4853-83ad-0b3a98868e4c" -> "140545494022480_3" [color="#6666FF"]
+	"140545503633808_4" [label="chat_manager (4)" color="#C8A8A2" fillcolor="#FBDBD5" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545494022480_3" -> "140545503633808_4" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="### Title: MindGuard: Towards Accessible and Stigma-free Mental Health First Aid via Edge LLM
+
+**URL:** http://arxiv.org/abs/2409.10064v1
+
+**Summary:** Mental health disorders are among the most prevalent diseases worldwide, affecting nearly one in four people. Despite their widespread impact, intervention rates remain below 25%, largely due to significant patient cooperation required for both diagnosis and intervention. The primary issue is stigma, which discourages over half of those affected from seeking help. MindGuard aims to address these challenges by providing an accessible, stigma-free, and professional mobile mental healthcare system designed for mental health first aid. At its core, MindGuard uses an innovative edge LLM equipped with professional mental health knowledge to integrate objective sensor data with subjective assessments, offering personalized screening and intervention conversations.
+
+**Methodology:** The evaluation of MindGuard involved using open datasets spanning four years and real-world deployments across various mobile devices over two weeks with 20 subjects. Remarkably, MindGuard achieved results comparable to GPT-4 and outperformed its counterpart by more than 10 times the model size.
+
+**Conclusion:** MindGuard has the potential to revolutionize mental healthcare practices by providing passive, integrated monitoring within daily life, thereby ensuring accessible and stigma-free support for both patients and healthcare providers.
+
+---
+
+### Title: SelECT-SQL: Self-correcting Ensemble Chain-of-Thought for Text-to-SQL
+
+**URL:** http://arxiv.org/abs/2409.10007v1
+
+**Summary:** Text-to-SQL is the task of converting natural language questions into SQL queries, a critical challenge in natural language processing and data management. Large language models (LLMs) perform impressively when used off-the-shelf but fall short of expected expert-level performance, especially when nuances in database schemas, questions, and SQL clauses are required. SelECT-SQL introduces an innovative solution using chain-of-thought prompting, self-correction, and ensemble methods to achieve state-of-the-art results on Text-to-SQL benchmarks.
+
+**Methodology:** Configured with GPT-3.5-Turbo as the base LLM, SelECT-SQL achieved 84.2% execution accuracy on the Spider leaderboard's development set, significantly outperforming other baseline solutions and the peak performance reported for GPT-4.
+
+**Conclusion:** SelECT-SQL has the potential to improve the reliability and accuracy of Text-to-SQL systems by providing more nuanced understanding and error correction during query generation.
+
+---
+
+### Title: GP-GPT: Large Language Model for Gene-Phenotype Mapping
+
+**URL:** http://arxiv.org/abs/2409.09825v1
+
+**Summary:** Pre-trained large language models (LLMs) have demonstrated success in natural language processing but face challenges when adapting to the complex and heterogeneous nature of genomics data. GP-GPT is the first specialized LLM designed for genetic-phenotype knowledge representation and genomics relation analysis, fine-tuned on a comprehensive corpus derived from multiple validated datasets and scientific publications.
+
+**Methodology:** The model's performance was evaluated across domain-specific tasks, demonstrating its proficiency in retrieving medical genetics information and performing common genomics analysis tasks. Comparisons with state-of-the-art LLMs like Llama2, Llama3, and GPT-4 showed that GP-GPT outperforms them.
+
+**Conclusion:** GP-GPT has the potential to enhance genetic disease relation research and facilitate accurate and efficient analysis in genomics and medical genetics by offering advanced integration of biological factors and clinical data." style=solid]
+	"140545503660304_3" [label="User_proxy (3)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545503633808_4" -> "140545503660304_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="### Title: MindGuard: Towards Accessible and Stigma-free Mental Health First Aid via Edge LLM
+
+**URL:** http://arxiv.org/abs/2409.10064v1
+
+**Summary:** Mental health disorders are among the most prevalent diseases worldwide, affecting nearly one in four people. Despite their widespread impact, intervention rates remain below 25%, largely due to significant patient cooperation required for both diagnosis and intervention. The primary issue is stigma, which discourages over half of those affected from seeking help. MindGuard aims to address these challenges by providing an accessible, stigma-free, and professional mobile mental healthcare system designed for mental health first aid. At its core, MindGuard uses an innovative edge LLM equipped with professional mental health knowledge to integrate objective sensor data with subjective assessments, offering personalized screening and intervention conversations.
+
+**Methodology:** The evaluation of MindGuard involved using open datasets spanning four years and real-world deployments across various mobile devices over two weeks with 20 subjects. Remarkably, MindGuard achieved results comparable to GPT-4 and outperformed its counterpart by more than 10 times the model size.
+
+**Conclusion:** MindGuard has the potential to revolutionize mental healthcare practices by providing passive, integrated monitoring within daily life, thereby ensuring accessible and stigma-free support for both patients and healthcare providers.
+
+---
+
+### Title: SelECT-SQL: Self-correcting Ensemble Chain-of-Thought for Text-to-SQL
+
+**URL:** http://arxiv.org/abs/2409.10007v1
+
+**Summary:** Text-to-SQL is the task of converting natural language questions into SQL queries, a critical challenge in natural language processing and data management. Large language models (LLMs) perform impressively when used off-the-shelf but fall short of expected expert-level performance, especially when nuances in database schemas, questions, and SQL clauses are required. SelECT-SQL introduces an innovative solution using chain-of-thought prompting, self-correction, and ensemble methods to achieve state-of-the-art results on Text-to-SQL benchmarks.
+
+**Methodology:** Configured with GPT-3.5-Turbo as the base LLM, SelECT-SQL achieved 84.2% execution accuracy on the Spider leaderboard's development set, significantly outperforming other baseline solutions and the peak performance reported for GPT-4.
+
+**Conclusion:** SelECT-SQL has the potential to improve the reliability and accuracy of Text-to-SQL systems by providing more nuanced understanding and error correction during query generation.
+
+---
+
+### Title: GP-GPT: Large Language Model for Gene-Phenotype Mapping
+
+**URL:** http://arxiv.org/abs/2409.09825v1
+
+**Summary:** Pre-trained large language models (LLMs) have demonstrated success in natural language processing but face challenges when adapting to the complex and heterogeneous nature of genomics data. GP-GPT is the first specialized LLM designed for genetic-phenotype knowledge representation and genomics relation analysis, fine-tuned on a comprehensive corpus derived from multiple validated datasets and scientific publications.
+
+**Methodology:** The model's performance was evaluated across domain-specific tasks, demonstrating its proficiency in retrieving medical genetics information and performing common genomics analysis tasks. Comparisons with state-of-the-art LLMs like Llama2, Llama3, and GPT-4 showed that GP-GPT outperforms them.
+
+**Conclusion:** GP-GPT has the potential to enhance genetic disease relation research and facilitate accurate and efficient analysis in genomics and medical genetics by offering advanced integration of biological factors and clinical data." style=dashed]
+	"140545493979024_3" [label="Coder (3)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140545503633808_4" -> "140545493979024_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="### Title: MindGuard: Towards Accessible and Stigma-free Mental Health First Aid via Edge LLM
+
+**URL:** http://arxiv.org/abs/2409.10064v1
+
+**Summary:** Mental health disorders are among the most prevalent diseases worldwide, affecting nearly one in four people. Despite their widespread impact, intervention rates remain below 25%, largely due to significant patient cooperation required for both diagnosis and intervention. The primary issue is stigma, which discourages over half of those affected from seeking help. MindGuard aims to address these challenges by providing an accessible, stigma-free, and professional mobile mental healthcare system designed for mental health first aid. At its core, MindGuard uses an innovative edge LLM equipped with professional mental health knowledge to integrate objective sensor data with subjective assessments, offering personalized screening and intervention conversations.
+
+**Methodology:** The evaluation of MindGuard involved using open datasets spanning four years and real-world deployments across various mobile devices over two weeks with 20 subjects. Remarkably, MindGuard achieved results comparable to GPT-4 and outperformed its counterpart by more than 10 times the model size.
+
+**Conclusion:** MindGuard has the potential to revolutionize mental healthcare practices by providing passive, integrated monitoring within daily life, thereby ensuring accessible and stigma-free support for both patients and healthcare providers.
+
+---
+
+### Title: SelECT-SQL: Self-correcting Ensemble Chain-of-Thought for Text-to-SQL
+
+**URL:** http://arxiv.org/abs/2409.10007v1
+
+**Summary:** Text-to-SQL is the task of converting natural language questions into SQL queries, a critical challenge in natural language processing and data management. Large language models (LLMs) perform impressively when used off-the-shelf but fall short of expected expert-level performance, especially when nuances in database schemas, questions, and SQL clauses are required. SelECT-SQL introduces an innovative solution using chain-of-thought prompting, self-correction, and ensemble methods to achieve state-of-the-art results on Text-to-SQL benchmarks.
+
+**Methodology:** Configured with GPT-3.5-Turbo as the base LLM, SelECT-SQL achieved 84.2% execution accuracy on the Spider leaderboard's development set, significantly outperforming other baseline solutions and the peak performance reported for GPT-4.
+
+**Conclusion:** SelECT-SQL has the potential to improve the reliability and accuracy of Text-to-SQL systems by providing more nuanced understanding and error correction during query generation.
+
+---
+
+### Title: GP-GPT: Large Language Model for Gene-Phenotype Mapping
+
+**URL:** http://arxiv.org/abs/2409.09825v1
+
+**Summary:** Pre-trained large language models (LLMs) have demonstrated success in natural language processing but face challenges when adapting to the complex and heterogeneous nature of genomics data. GP-GPT is the first specialized LLM designed for genetic-phenotype knowledge representation and genomics relation analysis, fine-tuned on a comprehensive corpus derived from multiple validated datasets and scientific publications.
+
+**Methodology:** The model's performance was evaluated across domain-specific tasks, demonstrating its proficiency in retrieving medical genetics information and performing common genomics analysis tasks. Comparisons with state-of-the-art LLMs like Llama2, Llama3, and GPT-4 showed that GP-GPT outperforms them.
+
+**Conclusion:** GP-GPT has the potential to enhance genetic disease relation research and facilitate accurate and efficient analysis in genomics and medical genetics by offering advanced integration of biological factors and clinical data." style=dashed]
+	1727063453.2954 [label=Summarize color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=parallelogram style=filled]
+	"140545493979024_3" -> 1727063453.2954 [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="### Title: MindGuard: Towards Accessible and Stigma-free Mental Health First Aid via Edge LLM
+
+**URL:** http://arxiv.org/abs/2409.10064v1
+
+**Summary:** Mental health disorders are among the most prevalent diseases worldwide, affecting nearly one in four people. Despite their widespread impact, intervention rates remain below 25%, largely due to significant patient cooperation required for both diagnosis and intervention. The primary issue is stigma, which discourages over half of those affected from seeking help. MindGuard aims to address these challenges by providing an accessible, stigma-free, and professional mobile mental healthcare system designed for mental health first aid. At its core, MindGuard uses an innovative edge LLM equipped with professional mental health knowledge to integrate objective sensor data with subjective assessments, offering personalized screening and intervention conversations.
+
+**Methodology:** The evaluation of MindGuard involved using open datasets spanning four years and real-world deployments across various mobile devices over two weeks with 20 subjects. Remarkably, MindGuard achieved results comparable to GPT-4 and outperformed its counterpart by more than 10 times the model size.
+
+**Conclusion:** MindGuard has the potential to revolutionize mental healthcare practices by providing passive, integrated monitoring within daily life, thereby ensuring accessible and stigma-free support for both patients and healthcare providers.
+
+---
+
+### Title: SelECT-SQL: Self-correcting Ensemble Chain-of-Thought for Text-to-SQL
+
+**URL:** http://arxiv.org/abs/2409.10007v1
+
+**Summary:** Text-to-SQL is the task of converting natural language questions into SQL queries, a critical challenge in natural language processing and data management. Large language models (LLMs) perform impressively when used off-the-shelf but fall short of expected expert-level performance, especially when nuances in database schemas, questions, and SQL clauses are required. SelECT-SQL introduces an innovative solution using chain-of-thought prompting, self-correction, and ensemble methods to achieve state-of-the-art results on Text-to-SQL benchmarks.
+
+**Methodology:** Configured with GPT-3.5-Turbo as the base LLM, SelECT-SQL achieved 84.2% execution accuracy on the Spider leaderboard's development set, significantly outperforming other baseline solutions and the peak performance reported for GPT-4.
+
+**Conclusion:** SelECT-SQL has the potential to improve the reliability and accuracy of Text-to-SQL systems by providing more nuanced understanding and error correction during query generation.
+
+---
+
+### Title: GP-GPT: Large Language Model for Gene-Phenotype Mapping
+
+**URL:** http://arxiv.org/abs/2409.09825v1
+
+**Summary:** Pre-trained large language models (LLMs) have demonstrated success in natural language processing but face challenges when adapting to the complex and heterogeneous nature of genomics data. GP-GPT is the first specialized LLM designed for genetic-phenotype knowledge representation and genomics relation analysis, fine-tuned on a comprehensive corpus derived from multiple validated datasets and scientific publications.
+
+**Methodology:** The model's performance was evaluated across domain-specific tasks, demonstrating its proficiency in retrieving medical genetics information and performing common genomics analysis tasks. Comparisons with state-of-the-art LLMs like Llama2, Llama3, and GPT-4 showed that GP-GPT outperforms them.
+
+**Conclusion:** GP-GPT has the potential to enhance genetic disease relation research and facilitate accurate and efficient analysis in genomics and medical genetics by offering advanced integration of biological factors and clinical data."]
+}

@@ -1,0 +1,164 @@
+Init (to chat_manager):
+
+Topic: LLM applications papers from last week. Requirement: 5 - 10 papers from different domains.
+
+--------------------------------------------------------------------------------
+
+Next speaker: Retrieve_Action_1
+
+Retrieve_Action_1 (to chat_manager):
+
+To retrieve related papers from the arXiv API for the topic "LLM applications" from the past week, you can use the following Python script:
+
+```python
+import requests
+from datetime import datetime, timedelta
+
+# Define the search query and parameters
+query = 'llm applications'
+start_date = (datetime.now() - timedelta(days=7)).strftime('%Y%m%d')
+end_date = datetime.now().strftime('%Y%m%d')
+
+params = {
+    'search_query': query,
+    'start': 0,  # Start from the first result
+    'max_results': 10,  # Limit to 10 results
+    'sort_by': 'submittedDate',
+    'sort_order': 'descend',
+    'from_date': start_date,
+    'until_date': end_date
+}
+
+# Make the API request
+url = 'https://export.arxiv.org/api/query'
+response = requests.get(url, params=params)
+
+# Parse the XML response
+from xml.etree import ElementTree as ET
+
+root = ET.fromstring(response.content)
+entries = root.findall('.//{http://www.w3.org/2005/Atom}entry')
+
+# Print the title, authors, abstract, and link for each paper
+for entry in entries:
+    title = entry.find('{http://www.w3.org/2005/Atom}title').text
+    authors = [author.text for author in entry.findall('.//{http://www.w3.org/2005/Atom}author/{http://www.w3.org/2005/Atom}name')]
+    abstract = entry.find('{http://www.w3.org/2005/Atom}summary').text
+    link = entry.find('{http://www.w3.org/2005/Atom}id').text
+    
+    print(f'Title: {title}')
+    print(f'Authors: {", ".join(authors)}')
+    print(f'Abstract: {abstract[:100]}...')  # Print only the first 100 characters of the abstract
+    print(f'Link: {link}\n')
+```
+
+This script will retrieve up to 10 papers related to "LLM applications" from the arXiv API for the past week and print their title, authors, abstract (truncated to 100 characters), and link.
+
+--------------------------------------------------------------------------------
+
+Next speaker: Retrieve_Action_2
+
+
+>>>>>>>> EXECUTING CODE BLOCK (inferred language is python)...
+Retrieve_Action_2 (to chat_manager):
+
+exitcode: 0 (execution succeeded)
+Code output: 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Title: Large Language Models as Software Components: A Taxonomy for
+  LLM-Integrated Applications
+Authors: Irene Weber
+Abstract:   Large Language Models (LLMs) have become widely adopted recently. Research
+explores their use both...
+Link: http://arxiv.org/abs/2406.10300v1
+
+Title: Parrot: Efficient Serving of LLM-based Applications with Semantic
+  Variable
+Authors: Chaofan Lin, Zhenhua Han, Chengruidong Zhang, Yuqing Yang, Fan Yang, Chen Chen, Lili Qiu
+Abstract:   The rise of large language models (LLMs) has enabled LLM-based applications
+(a.k.a. AI agents or c...
+Link: http://arxiv.org/abs/2405.19888v1
+
+Title: A Survey of Large Language Models on Generative Graph Analytics: Query,
+  Learning, and Applications
+Authors: Wenbo Shang, Xin Huang
+Abstract:   A graph is a fundamental data model to represent various entities and their
+complex relationships ...
+Link: http://arxiv.org/abs/2404.14809v1
+
+Title: From LLMs to LLM-based Agents for Software Engineering: A Survey of
+  Current, Challenges and Future
+Authors: Haolin Jin, Linghan Huang, Haipeng Cai, Jun Yan, Bo Li, Huaming Chen
+Abstract:   With the rise of large language models (LLMs), researchers are increasingly
+exploring their applic...
+Link: http://arxiv.org/abs/2408.02479v1
+
+Title: On the Origin of LLMs: An Evolutionary Tree and Graph for 15,821 Large
+  Language Models
+Authors: Sarah Gao, Andrew Kean Gao
+Abstract:   Since late 2022, Large Language Models (LLMs) have become very prominent with
+LLMs like ChatGPT an...
+Link: http://arxiv.org/abs/2307.09793v1
+
+Title: Look Within, Why LLMs Hallucinate: A Causal Perspective
+Authors: He Li, Haoang Chi, Mingyu Liu, Wenjing Yang
+Abstract:   The emergence of large language models (LLMs) is a milestone in generative
+artificial intelligence...
+Link: http://arxiv.org/abs/2407.10153v1
+
+Title: Identifying Multiple Personalities in Large Language Models with
+  External Evaluation
+Authors: Xiaoyang Song, Yuta Adachi, Jessie Feng, Mouwei Lin, Linhao Yu, Frank Li, Akshat Gupta, Gopala Anumanchipalli, Simerjot Kaur
+Abstract:   As Large Language Models (LLMs) are integrated with human daily applications
+rapidly, many societa...
+Link: http://arxiv.org/abs/2402.14805v1
+
+Title: Mobile Edge Intelligence for Large Language Models: A Contemporary
+  Survey
+Authors: Guanqiao Qu, Qiyuan Chen, Wei Wei, Zheng Lin, Xianhao Chen, Kaibin Huang
+Abstract:   On-device large language models (LLMs), referring to running LLMs on edge
+devices, have raised con...
+Link: http://arxiv.org/abs/2407.18921v1
+
+Title: Is LLM-as-a-Judge Robust? Investigating Universal Adversarial Attacks on
+  Zero-shot LLM Assessment
+Authors: Vyas Raina, Adian Liusie, Mark Gales
+Abstract:   Large Language Models (LLMs) are powerful zero-shot assessors used in
+real-world situations such a...
+Link: http://arxiv.org/abs/2402.14016v2
+
+Title: Large Language Model (LLM) for Telecommunications: A Comprehensive
+  Survey on Principles, Key Techniques, and Opportunities
+Authors: Hao Zhou, Chengming Hu, Ye Yuan, Yufei Cui, Yili Jin, Can Chen, Haolun Wu, Dun Yuan, Li Jiang, Di Wu, Xue Liu, Charlie Zhang, Xianbin Wang, Jiangchuan Liu
+Abstract:   Large language models (LLMs) have received considerable attention recently
+due to their outstandin...
+Link: http://arxiv.org/abs/2405.10825v2
+
+
+
+--------------------------------------------------------------------------------
+
+Next speaker: Research_Action_1
+
+Research_Action_1 (to chat_manager):
+
+Sure! Below is a markdown table categorizing the papers based on their domains:
+
+| Domain | Title | Authors | Summary | Link |
+| --- | --- | --- | --- | --- |
+| Software Engineering | Large Language Models as Software Components: A Taxonomy for LLM-Integrated Applications | Irene Weber | This paper explores the use of large language models (LLMs) in software engineering, providing a taxonomy for their integration into applications. | [Link](http://arxiv.org/abs/2406.10300v1) |
+| AI Agents | Parrot: Efficient Serving of LLM-based Applications with Semantic Variable | Chaofan Lin et al. | This paper presents Parrot, an efficient system for serving large language model (LLM)-based applications using semantic variables. | [Link](http://arxiv.org/abs/2405.19888v1) |
+| Graph Analytics | A Survey of Large Language Models on Generative Graph Analytics: Query, Learning, and Applications | Wenbo Shang, Xin Huang | This survey paper discusses the use of large language models (LLMs) in generative graph analytics, covering query, learning, and application aspects. | [Link](http://arxiv.org/abs/2404.14809v1) |
+| Software Engineering | From LLMs to LLM-based Agents for Software Engineering: A Survey of Current, Challenges and Future | Haolin Jin et al. | This paper provides a survey on the current state, challenges, and future directions of using large language models (LLMs) in software engineering and their integration into agents. | [Link](http://arxiv.org/abs/2408.02479v1) |
+| Evolutionary Biology | On the Origin of LLMs: An Evolutionary Tree and Graph for 15,821 Large Language Models | Sarah Gao, Andrew Kean Gao | This paper presents an evolutionary tree and graph to understand the origins and relationships among 15,821 large language models (LLMs). | [Link](http://arxiv.org/abs/2307.09793v1) |
+| Causal Inference | Look Within, Why LLMs Hallucinate: A Causal Perspective | He Li et al. | This paper explores the causal factors behind the hallucination phenomenon in large language models (LLMs). | [Link](http://arxiv.org/abs/2407.10153v1) |
+| Societal Impact | Identifying Multiple Personalities in Large Language Models with External Evaluation | Xiaoyang Song et al. | This paper investigates the presence of multiple personalities in large language models (LLMs) through external evaluation. | [Link](http://arxiv.org/abs/2402.14805v1) |
+| Edge Computing | Mobile Edge Intelligence for Large Language Models: A Contemporary Survey | Guanqiao Qu et al. | This survey paper discusses the use of large language models (LLMs) in mobile edge intelligence, highlighting current trends and opportunities. | [Link](http://arxiv.org/abs/2407.18921v1) |
+| Security | Is LLM-as-a-Judge Robust? Investigating Universal Adversarial Attacks on Zero-shot LLM Assessment | Vyas Raina et al. | This paper examines the robustness of large language models (LLMs) used as judges, specifically investigating universal adversarial attacks in zero-shot assessment scenarios. | [Link](http://arxiv.org/abs/2402.14016v2) |
+| Telecommunications | Large Language Model (LLM) for Telecommunications: A Comprehensive Survey on Principles, Key Techniques, and Opportunities | Hao Zhou et al. | This comprehensive survey paper covers the principles, key techniques, and opportunities associated with using large language models (LLMs) in telecommunications. | [Link](http://arxiv.org/abs/2405.10825v2) |
+
+This table should help you quickly identify the domain of each paper and understand its focus.
+
+--------------------------------------------------------------------------------

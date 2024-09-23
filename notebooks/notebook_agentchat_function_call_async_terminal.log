@@ -1,0 +1,42 @@
+user_proxy (to chatbot):
+
+Create a timer for 5 seconds and then a stopwatch for 5 seconds.
+
+--------------------------------------------------------------------------------
+chatbot (to user_proxy):
+
+***** Suggested tool call (call_YPy76Pi5t5uJ7MJZS2nLLvAh): timer *****
+Arguments: 
+{"num_seconds": "5"}
+**********************************************************************
+***** Suggested tool call (call_HstVFBYgKyx8PxP9ixkOddqI): stopwatch *****
+Arguments: 
+{"num_seconds": "5"}
+**************************************************************************
+
+--------------------------------------------------------------------------------
+
+>>>>>>>> EXECUTING ASYNC FUNCTION timer...
+
+>>>>>>>> EXECUTING ASYNC FUNCTION stopwatch...
+user_proxy (to chatbot):
+
+user_proxy (to chatbot):
+
+***** Response from calling tool (call_YPy76Pi5t5uJ7MJZS2nLLvAh) *****
+Timer is done!
+**********************************************************************
+
+--------------------------------------------------------------------------------
+user_proxy (to chatbot):
+
+***** Response from calling tool (call_HstVFBYgKyx8PxP9ixkOddqI) *****
+Stopwatch is done!
+**********************************************************************
+
+--------------------------------------------------------------------------------
+chatbot (to user_proxy):
+
+Both the timer and the stopwatch for 5 seconds are done! TERMINATE
+
+--------------------------------------------------------------------------------
