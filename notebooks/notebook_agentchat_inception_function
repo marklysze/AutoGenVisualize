@@ -1,0 +1,136 @@
+digraph {
+	bgcolor="#123456"
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	"139876323168144_1" [label="user_proxy (1)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	start -> "139876323168144_1" [color="#6666FF"]
+	"139876322983632_1" [label="chatbot (1)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876323168144_1" -> "139876322983632_1" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Define a function that gets a URL, then prints the response body.
+Reply TERMINATE when the function is defined." style=solid]
+	"139876322983632_2" [label="chatbot (2)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876323168144_1" -> "139876322983632_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Define a function that gets a URL, then prints the response body.
+Reply TERMINATE when the function is defined." style=solid]
+	"139876322983632_3" [label="chatbot (3)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876323168144_1" -> "139876322983632_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Define a function that gets a URL, then prints the response body.
+Reply TERMINATE when the function is defined." style=solid]
+	"deb9e5c1-066a-4ca3-abe4-0376954d80e0" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"139876322983632_3" -> "deb9e5c1-066a-4ca3-abe4-0376954d80e0" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="ChatCompletion(id='chatcmpl-ACXHrl8Zl1lk0ZQPlqlTgrDiFcAZV', choices=[Choice(finish_reason='function_call', index=0, logprobs=None, message=ChatCompletionMessage(content=None, refusal=None, role='assistant', function_call=FunctionCall(arguments='{\"name\":\"get_url_response\",\"description\":\"Fetches a URL and prints the response body.\",\"arguments\":\"{ \\\"url\\\": { \\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The URL to fetch\\\" }}\",\"packages\":\"requests\",\"code\":\"import requests\\n\\ndef get_url_response(url):\\n    response = requests.get(url)\\n    print(response.text)\"}', name='define_function'), tool_calls=None))], created=1727551255, model='gpt-4o-mini-2024-07-18', object='chat.completion', service_tier=None, system_fingerprint='fp_f85bea6784', usage=CompletionUsage(completion_tokens=84, prompt_tokens=252, total_tokens=336, completion_tokens_details={'reasoning_tokens': 0}), cost=8.819999999999999e-05)"]
+	"deb9e5c1-066a-4ca3-abe4-0376954d80e0" -> "139876322983632_3" [color="#6666FF"]
+	"139876323168144_2" [label="user_proxy (2)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876322983632_3" -> "139876323168144_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="" style=solid]
+	"139876322983632_4" [label="chatbot (4)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876323168144_2" -> "139876322983632_4" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="A function has been added to the context of this conversation.
+Description: Fetches a URL and prints the response body." style=solid]
+	"cbcae49f-d5af-49bc-a179-c4edb293a34f" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"139876322983632_4" -> "cbcae49f-d5af-49bc-a179-c4edb293a34f" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="The function has been defined. 
+
+Terminating."]
+	"cbcae49f-d5af-49bc-a179-c4edb293a34f" -> "139876322983632_4" [color="#6666FF"]
+	"139876323168144_3" [label="user_proxy (3)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876322983632_4" -> "139876323168144_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="The function has been defined. 
+
+Terminating." style=solid]
+	"139876322983632_5" [label="chatbot (5)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876323168144_3" -> "139876322983632_5" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Reply TERMINATE when the initial request has been fulfilled." style=solid]
+	"3483a8aa-7c41-441d-9e56-42b66cebd251" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"139876322983632_5" -> "3483a8aa-7c41-441d-9e56-42b66cebd251" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=TERMINATE]
+	"3483a8aa-7c41-441d-9e56-42b66cebd251" -> "139876322983632_5" [color="#6666FF"]
+	"139876323168144_4" [label="user_proxy (4)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876322983632_5" -> "139876323168144_4" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=TERMINATE style=solid]
+	1727551258.015761 [label=Termination color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=octagon style=filled]
+	"139876323168144_4" -> 1727551258.015761 [label=check_termination_and_human_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=""]
+	1727551258.016281 [label=Summarize color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=parallelogram style=filled]
+	1727551258.015761 -> 1727551258.016281 [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=""]
+	"139876322983632_6" [label="chatbot (6)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876323168144_4" -> "139876322983632_6" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Print the response body of https://echo.free.beeceptor.com/
+Use the functions you know about." style=solid]
+	"3748bad8-9821-4416-857a-44f09e7ff85d" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"139876322983632_6" -> "3748bad8-9821-4416-857a-44f09e7ff85d" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="ChatCompletion(id='chatcmpl-ACXHuvURglniImLdQr8GGQEK5lE3N', choices=[Choice(finish_reason='function_call', index=0, logprobs=None, message=ChatCompletionMessage(content=None, refusal=None, role='assistant', function_call=FunctionCall(arguments='{\"url\":\"https://echo.free.beeceptor.com/\"}', name='get_url_response'), tool_calls=None))], created=1727551258, model='gpt-4o-mini-2024-07-18', object='chat.completion', service_tier=None, system_fingerprint='fp_f85bea6784', usage=CompletionUsage(completion_tokens=23, prompt_tokens=281, total_tokens=304, completion_tokens_details={'reasoning_tokens': 0}), cost=5.594999999999999e-05)"]
+	"3748bad8-9821-4416-857a-44f09e7ff85d" -> "139876322983632_6" [color="#6666FF"]
+	"139876323168144_5" [label="user_proxy (5)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876322983632_6" -> "139876323168144_5" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="" style=solid]
+	"139876322983632_7" [label="chatbot (7)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876323168144_5" -> "139876322983632_7" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Installing package: requests
+Result of get_url_response function execution:
+{
+  \"method\": \"GET\",
+  \"protocol\": \"https\",
+  \"host\": \"echo.free.beeceptor.com\",
+  \"path\": \"/\",
+  \"ip\": \"36.255.112.129:39840\",
+  \"headers\": {
+    \"Host\": \"echo.free.beeceptor.com\",
+    \"User-Agent\": \"python-requests/2.32.3\",
+    \"Accept\": \"*/*\",
+    \"Accept-Encoding\": \"gzip, deflate\"
+  },
+  \"parsedQueryParams\": {}
+}
+" style=solid]
+	"9e8d3313-d27b-486a-a9f3-9bd6d0d1cfd9" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"139876322983632_7" -> "9e8d3313-d27b-486a-a9f3-9bd6d0d1cfd9" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="The response body from the URL `https://echo.free.beeceptor.com/` is as follows:
+
+```
+{
+  \"method\": \"GET\",
+  \"protocol\": \"https\",
+  \"host\": \"echo.free.beeceptor.com\",
+  \"path\": \"/\",
+  \"ip\": \"36.255.112.129:39840\",
+  \"headers\": {
+    \"Host\": \"echo.free.beeceptor.com\",
+    \"User-Agent\": \"python-requests/2.32.3\",
+    \"Accept\": \"*/*\",
+    \"Accept-Encoding\": \"gzip, deflate\"
+  },
+  \"parsedQueryParams\": {}
+}
+```
+
+TERMINATE"]
+	"9e8d3313-d27b-486a-a9f3-9bd6d0d1cfd9" -> "139876322983632_7" [color="#6666FF"]
+	"139876323168144_6" [label="user_proxy (6)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"139876322983632_7" -> "139876323168144_6" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="The response body from the URL `https://echo.free.beeceptor.com/` is as follows:
+
+```
+{
+  \"method\": \"GET\",
+  \"protocol\": \"https\",
+  \"host\": \"echo.free.beeceptor.com\",
+  \"path\": \"/\",
+  \"ip\": \"36.255.112.129:39840\",
+  \"headers\": {
+    \"Host\": \"echo.free.beeceptor.com\",
+    \"User-Agent\": \"python-requests/2.32.3\",
+    \"Accept\": \"*/*\",
+    \"Accept-Encoding\": \"gzip, deflate\"
+  },
+  \"parsedQueryParams\": {}
+}
+```
+
+TERMINATE" style=solid]
+	1727551264.58091 [label=Termination color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=octagon style=filled]
+	"139876323168144_6" -> 1727551264.58091 [label=check_termination_and_human_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=""]
+	1727551264.581308 [label=Summarize color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=parallelogram style=filled]
+	1727551264.58091 -> 1727551264.581308 [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="The response body from the URL `https://echo.free.beeceptor.com/` is as follows:
+
+```
+{
+  \"method\": \"GET\",
+  \"protocol\": \"https\",
+  \"host\": \"echo.free.beeceptor.com\",
+  \"path\": \"/\",
+  \"ip\": \"36.255.112.129:39840\",
+  \"headers\": {
+    \"Host\": \"echo.free.beeceptor.com\",
+    \"User-Agent\": \"python-requests/2.32.3\",
+    \"Accept\": \"*/*\",
+    \"Accept-Encoding\": \"gzip, deflate\"
+  },
+  \"parsedQueryParams\": {}
+}
+```
+
+"]
+}

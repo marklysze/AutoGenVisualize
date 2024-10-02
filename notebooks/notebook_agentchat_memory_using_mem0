@@ -1,0 +1,7 @@
+digraph {
+	bgcolor="#123456"
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	"9716df27-62f7-47d3-ab99-ef0903e77ff8" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"140645890397904_0" -> "9716df27-62f7-47d3-ab99-ef0903e77ff8" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="Your order number is 112217629."]
+	"9716df27-62f7-47d3-ab99-ef0903e77ff8" -> "140645890397904_0" [color="#6666FF"]
+}

@@ -1,7 +1,15 @@
 CustomModelClient config: {'model': 'microsoft/Phi-3.5-mini-instruct', 'model_client_cls': 'CustomModelClient', 'device': 'cpu', 'n': 1, 'params': {'max_length': 1000}}
 Using device: cpu
-Downloading shards:   0%|          | 0/2 [00:00<?, ?it/s]Downloading shards:  50%|#####     | 1/2 [00:00<00:00,  3.97it/s]Downloading shards: 100%|##########| 2/2 [00:00<00:00,  4.06it/s]Downloading shards: 100%|##########| 2/2 [00:00<00:00,  4.04it/s]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|#####     | 1/2 [00:05<00:05,  5.50s/it]Loading checkpoint shards: 100%|##########| 2/2 [00:08<00:00,  4.12s/it]Loading checkpoint shards: 100%|##########| 2/2 [00:08<00:00,  4.33s/it]
+
+Downloading shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Downloading shards:  50%|#####     | 1/2 [00:00<00:00,  3.97it/s]
+Downloading shards: 100%|##########| 2/2 [00:00<00:00,  4.06it/s]
+Downloading shards: 100%|##########| 2/2 [00:00<00:00,  4.04it/s]
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|#####     | 1/2 [00:05<00:05,  5.50s/it]
+Loading checkpoint shards: 100%|##########| 2/2 [00:08<00:00,  4.12s/it]
+Loading checkpoint shards: 100%|##########| 2/2 [00:08<00:00,  4.33s/it]
 Loaded model microsoft/Phi-3.5-mini-instruct to cpu
 user_proxy (to assistant):
 

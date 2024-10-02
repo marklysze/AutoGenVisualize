@@ -1,0 +1,28 @@
+digraph {
+	bgcolor="#123456"
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	start [label=START color="#6666FF" fillcolor="#222222" fontcolor="#FFFFFF" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 style=filled]
+	"140365709048720_1" [label="User_proxy (1)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	start -> "140365709048720_1" [color="#6666FF"]
+	"140365710996624_1" [label="image-explainer (1)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140365709048720_1" -> "140365710996624_1" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="What's the breed of this dog?
+<img https://th.bing.com/th/id/R.422068ce8af4e15b0634fe2540adea7a?rik=y4OcXBE%2fqutDOw&pid=ImgRaw&r=0>." style=solid]
+	"140365710996624_2" [label="image-explainer (2)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140365709048720_1" -> "140365710996624_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="What's the breed of this dog?
+<img https://th.bing.com/th/id/R.422068ce8af4e15b0634fe2540adea7a?rik=y4OcXBE%2fqutDOw&pid=ImgRaw&r=0>." style=solid]
+	"140365710996624_3" [label="image-explainer (3)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140365709048720_1" -> "140365710996624_3" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="What's the breed of this dog?
+<img https://th.bing.com/th/id/R.422068ce8af4e15b0634fe2540adea7a?rik=y4OcXBE%2fqutDOw&pid=ImgRaw&r=0>." style=solid]
+	"140365710996624_4" [label="image-explainer (4)" color="#C7C19D" fillcolor="#FAF4D0" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140365709048720_1" -> "140365710996624_4" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="What's the breed of this dog?
+<img https://th.bing.com/th/id/R.422068ce8af4e15b0634fe2540adea7a?rik=y4OcXBE%2fqutDOw&pid=ImgRaw&r=0>." style=solid]
+	"d8f847e7-9c9c-4aca-b61f-d05c6f3180e5" [label=OpenAI color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=invhouse style=filled]
+	"140365710996624_4" -> "d8f847e7-9c9c-4aca-b61f-d05c6f3180e5" [label=generate_oai_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="This dog appears to be a Goldendoodle, which is a crossbreed between a Golden Retriever and a Poodle. They are known for their curly coats and friendly temperament."]
+	"d8f847e7-9c9c-4aca-b61f-d05c6f3180e5" -> "140365710996624_4" [color="#6666FF"]
+	"140365709048720_2" [label="User_proxy (2)" color="#8DAC84" fillcolor="#C0DFB7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=oval style=filled]
+	"140365710996624_4" -> "140365709048720_2" [label=received_message color="#6666FF" dir=forward fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="This dog appears to be a Goldendoodle, which is a crossbreed between a Golden Retriever and a Poodle. They are known for their curly coats and friendly temperament." style=solid]
+	1727551932.205087 [label=Termination color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=octagon style=filled]
+	"140365709048720_2" -> 1727551932.205087 [label=check_termination_and_human_reply color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip=""]
+	1727551932.205988 [label=Summarize color="#00BE92" fillcolor="#DDFFF7" fontcolor="#222222" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" penwidth=3.0 shape=parallelogram style=filled]
+	1727551932.205087 -> 1727551932.205988 [label=_last_msg_as_summary color="#6666FF" fontcolor="#FAFAFA" fontname="Helvetica, DejaVu Sans, Arial, Courier, sans-serif" labeldistance=5.0 labelhref="" labeltooltip="This dog appears to be a Goldendoodle, which is a crossbreed between a Golden Retriever and a Poodle. They are known for their curly coats and friendly temperament."]
+}
